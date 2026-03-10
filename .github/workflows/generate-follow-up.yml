@@ -1,13 +1,10 @@
 name: Generate Webinar Follow-up
 
 on:
-  schedule:
-    # Every day at 7:00 UTC (8:00 CET / 9:00 CEST)
-    - cron: '0 7 * * *'
   workflow_dispatch:
     inputs:
       transcript_file:
-        description: 'Filename of transcript (e.g. 03_Vibe coding v praxi – 10.3.2026 přepis.md)'
+        description: 'Filename of transcript (leave empty to auto-detect all new ones)'
         required: false
         type: string
       force:
@@ -28,12 +25,12 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Check for new transcripts and generate follow-ups
+      - name: Generate follow-up emails
         env:
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
           AIRTABLE_TOKEN: ${{ secrets.AIRTABLE_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
           CONTENT_REPO: aibilitycz/content
           TRANSCRIPT_DIR: prepisy-webinaru-edu
           MANUAL_FILE: ${{ github.event.inputs.transcript_file || '' }}

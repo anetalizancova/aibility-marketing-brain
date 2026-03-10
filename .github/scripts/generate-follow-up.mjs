@@ -26,7 +26,6 @@ const PROCESSED_FILE = '.github/scripts/processed-transcripts.json';
 const AIRTABLE_BASE_ID = 'apprWm5AZiUAg1SGF';
 const AIRTABLE_TABLE_ID = 'tblNKetDg4clKVyrf';
 const AIRTABLE_VIEW_ID = 'viwTDjhMOmO7AQAm2';
-const SLACK_USER_ID = 'U08Q597A4E4';
 const FEEDBACK_URL = 'https://airtable.com/apprWm5AZiUAg1SGF/pagKo4kCojw2MqEPE/form';
 const DEFAULT_HERO_IMAGE = 'https://img.mailinblue.com/7541826/images/content_library/original/671be011405d49ae3aa8c628.png';
 
@@ -362,65 +361,34 @@ function commitAndPush(files, message) {
 
 // ── Slack notification ───────────────────────────────────────────
 
-async function sendSlackDM(parsed, missingLinks) {
-  const token = process.env.SLACK_BOT_TOKEN;
-  if (!token) {
-    console.warn('  ⚠️  SLACK_BOT_TOKEN not set, skipping Slack');
+async function sendSlackNotification(parsed, missingLinks) {
+  const webhookUrl = process.env.SLACK_WEBHOOK_URL;
+  if (!webhookUrl) {
+    console.warn('  ⚠️  SLACK_WEBHOOK_URL not set, skipping Slack');
     return;
   }
 
   const repoUrl = 'https://github.com/anetalizancova/aibility-marketing-brain';
-  const blocks = [
-    {
-      type: 'header',
-      text: { type: 'plain_text', text: `📧 Follow-up draft: ${parsed.webinarName}` },
-    },
-    {
-      type: 'section',
-      text: {
-        type: 'mrkdwn',
-        text: `Nový follow-up email byl automaticky vygenerován z přepisu webináře *${parsed.webinarName}* (${parsed.date}).\n\nSoubory najdeš v repu: <${repoUrl}|aibility-marketing-brain> → \`content/emails/Webinars/\``,
-      },
-    },
-  ];
+  let text = `📧 *Follow-up draft: ${parsed.webinarName}* (${parsed.date})\n`;
+  text += `Nový follow-up email vygenerován z přepisu webináře.\n`;
+  text += `👉 <${repoUrl}|Otevřít repo> → \`content/emails/Webinars/\`\n`;
 
   if (missingLinks.length > 0) {
-    blocks.push({
-      type: 'section',
-      text: {
-        type: 'mrkdwn',
-        text: `⚠️ *Chybějící odkazy* (doplnit):\n${missingLinks.map(l => `• ${l}`).join('\n')}`,
-      },
-    });
+    text += `\n⚠️ *Chybějící odkazy:*\n${missingLinks.map(l => `• ${l}`).join('\n')}`;
   } else {
-    blocks.push({
-      type: 'section',
-      text: { type: 'mrkdwn', text: '✅ Všechny odkazy nalezeny v Airtable' },
-    });
+    text += `\n✅ Všechny odkazy nalezeny v Airtable`;
   }
 
-  blocks.push({
-    type: 'context',
-    elements: [{ type: 'mrkdwn', text: 'Vygenerováno automaticky · webinar-follow-up bot' }],
-  });
-
-  const res = await fetch('https://slack.com/api/chat.postMessage', {
+  const res = await fetch(webhookUrl, {
     method: 'POST',
-    headers: {
-      Authorization: `Bearer ${token}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      channel: SLACK_USER_ID,
-      text: `📧 Nový follow-up draft: ${parsed.webinarName} – ${parsed.date}`,
-      blocks,
-    }),
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ text }),
   });
 
   if (res.ok) {
-    const data = await res.json();
-    if (data.ok) console.log('  ✅ Slack DM sent');
-    else console.warn(`  ⚠️  Slack error: ${data.error}`);
+    console.log('  ✅ Slack notification sent');
+  } else {
+    console.warn(`  ⚠️  Slack webhook error: ${res.status}`);
   }
 }
 
@@ -527,7 +495,7 @@ async function main() {
       if (!airtable?.['Odkaz na podcast']) missingLinks.push('Podcast');
       if (!airtable?.['Další materiály']) missingLinks.push('Materiály');
 
-      await sendSlackDM(parsed, missingLinks);
+      await sendSlackNotification(parsed, missingLinks);
 
     } catch (err) {
       console.error(`\n  ❌ Error: ${err.message}`);
