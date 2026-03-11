@@ -12,6 +12,18 @@ on:
         required: false
         type: boolean
         default: false
+      youtube_url:
+        description: 'Manual YouTube/video URL override'
+        required: false
+        type: string
+      podcast_url:
+        description: 'Manual podcast URL override'
+        required: false
+        type: string
+      materials_url:
+        description: 'Manual materials URL override'
+        required: false
+        type: string
 
 jobs:
   generate-follow-up:
@@ -35,4 +47,7 @@ jobs:
           TRANSCRIPT_DIR: prepisy-webinaru-edu
           MANUAL_FILE: ${{ github.event.inputs.transcript_file || '' }}
           FORCE: ${{ github.event.inputs.force || 'false' }}
+          MANUAL_YOUTUBE: ${{ github.event.inputs.youtube_url || '' }}
+          MANUAL_PODCAST: ${{ github.event.inputs.podcast_url || '' }}
+          MANUAL_MATERIALS: ${{ github.event.inputs.materials_url || '' }}
         run: node .github/scripts/generate-follow-up.mjs

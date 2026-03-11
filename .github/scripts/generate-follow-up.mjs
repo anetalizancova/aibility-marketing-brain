@@ -100,8 +100,8 @@ function parseTranscriptFilename(filename) {
     };
   }
 
-  // AIMS: "AIMS D.M.YYYY přepis..."
-  const aimsMatch = name.match(/^AIMS\s+(\d{1,2})\.(\d{1,2})\.(\d{4})\s/);
+  // AIMS: "AIMS D.M.YYYY přepis..." or "02_AIMS D.M.YYYY přepis..."
+  const aimsMatch = name.match(/^(?:02_)?AIMS\s+(\d{1,2})\.(\d{1,2})\.(\d{4})\s/);
   if (aimsMatch) {
     return {
       type: 'AIMS',
@@ -326,7 +326,7 @@ function generateHTML(parsed, airtable, aiResult) {
 
   const keyPointsHtml = aiResult.key_points
     .map(kp =>
-      `<li style="margin: 0; margin-bottom: 12px;"><p style="margin: 0; orphans: 2; widows: 2;"><strong>${kp.title}</strong> – ${kp.description}</p></li>`
+      `<li style="margin: 0; margin-bottom: 12px;"><p style="margin: 0; orphans: 2; widows: 2;"><strong style="font-family: 'Hedvig Letters Serif', Georgia, serif;">${kp.title}</strong> – ${kp.description}</p></li>`
     )
     .join('\n');
 
@@ -454,16 +454,26 @@ async function main() {
       const transcript = await downloadTranscript(filename);
       console.log(`  📄 ${transcript.length} characters`);
 
-      // 3. Airtable lookup
+      // 3. Airtable lookup (with manual override support)
       console.log('  🔍 Looking up in Airtable...');
-      const airtable = await findWebinarInAirtable(parsed);
+      let airtable = await findWebinarInAirtable(parsed);
       if (airtable) {
         console.log(`  ✅ Found: "${airtable['Název'] || 'N/A'}"`);
         if (airtable['Odkaz na záznam']) console.log(`     📹 YouTube: ✓`);
         if (airtable['Odkaz na podcast']) console.log(`     🎧 Podcast: ✓`);
         if (airtable['Další materiály']) console.log(`     📁 Materiály: ✓`);
       } else {
-        console.log('  ⚠️  Not found in Airtable → using placeholders');
+        console.log('  ⚠️  Not found in Airtable → checking manual overrides');
+      }
+
+      const manualYoutube = process.env.MANUAL_YOUTUBE?.trim();
+      const manualPodcast = process.env.MANUAL_PODCAST?.trim();
+      const manualMaterials = process.env.MANUAL_MATERIALS?.trim();
+      if (manualYoutube || manualPodcast || manualMaterials) {
+        airtable = airtable || {};
+        if (manualYoutube) { airtable['Odkaz na záznam'] = manualYoutube; console.log('     📹 YouTube (manual): ✓'); }
+        if (manualPodcast) { airtable['Odkaz na podcast'] = manualPodcast; console.log('     🎧 Podcast (manual): ✓'); }
+        if (manualMaterials) { airtable['Další materiály'] = manualMaterials; console.log('     📁 Materiály (manual): ✓'); }
       }
 
       // 4. AI extraction
