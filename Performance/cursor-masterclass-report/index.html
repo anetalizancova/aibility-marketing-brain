@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cursor Masterclass — Analýza kampaně | Aibility</title>
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:wght@400;500;600;700;800&family=Hedvig+Letters+Serif:opsz@12..24&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --font-family: "Google Sans Flex", sans-serif;
+            --font-family-headings: "Hedvig Letters Serif", serif;
+            --text-xs: 0.75rem; --text-sm: 0.875rem; --text-base: 1rem; --text-lg: 1.125rem; --text-xl: 1.25rem; --text-2xl: 1.5rem; --text-3xl: 1.875rem;
+            --font-normal: 400; --font-medium: 500; --font-semibold: 600; --font-bold: 700;
+            --leading-tight: 1.1; --leading-normal: 1.5; --leading-relaxed: 1.625;
+            --space-1: 0.25rem; --space-2: 0.5rem; --space-3: 0.75rem; --space-4: 1rem; --space-5: 1.25rem; --space-6: 1.5rem; --space-8: 2rem; --space-10: 2.5rem; --space-12: 3rem; --space-16: 4rem;
+            --radius-sm: 0.375rem; --radius-md: 0.5rem; --radius-lg: 0.75rem; --radius-xl: 1rem; --radius-2xl: 1.5rem; --radius-full: 9999px;
+            --transition-fast: 150ms ease;
+            --color-bg-primary: #f9fafb; --color-bg-secondary: #F8FAFC; --color-bg-card: #FFFFFF; --color-bg-card-hover: #F1F5F9;
+            --color-border: rgba(15,23,42,0.08); --color-border-light: rgba(15,23,42,0.15);
+            --color-accent-primary: #5000ab; --color-accent-secondary: #0891B2; --color-success: #059669; --color-warning: #D97706;
+            --color-text-primary: #0F172A; --color-text-secondary: #475569; --color-text-tertiary: #94A3B8;
+            --code-bg: #e5e7eb;
+        }
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html { font-size: 16px; -webkit-font-smoothing: antialiased; scroll-behavior: smooth; }
+        body { font-family: var(--font-family); font-size: var(--text-base); line-height: var(--leading-normal); color: var(--color-text-primary); background: var(--color-bg-primary); }
+
+        .wiki-layout { display: grid; grid-template-columns: 260px 1fr; grid-template-rows: auto 1fr; min-height: 100vh; }
+        .topbar { grid-row:1; grid-column:1/-1; display:flex; align-items:center; justify-content:space-between; padding:0 var(--space-6); height:52px; background:var(--color-bg-card); border-bottom:1px solid var(--color-border); position:sticky; top:0; z-index:200; gap:var(--space-4); }
+        .topbar-left { display:flex; align-items:center; gap:var(--space-3); }
+        .topbar-title { font-weight:var(--font-semibold); color:var(--color-text-primary); font-size:var(--text-sm); }
+        .topbar-meta { color:var(--color-text-tertiary); font-size:var(--text-xs); }
+        .topbar-right { display:flex; align-items:center; gap:var(--space-2); }
+        .topbar-btn { display:flex; align-items:center; gap:6px; padding:6px 14px; border:1px solid var(--color-border-light); border-radius:var(--radius-full); background:transparent; color:var(--color-text-secondary); font-size:var(--text-sm); font-family:var(--font-family); cursor:pointer; transition:all var(--transition-fast); white-space:nowrap; text-decoration:none; }
+        .topbar-btn:hover { background:var(--color-bg-card-hover); color:var(--color-text-primary); }
+        .topbar-btn.active { background:rgba(80,0,171,.1); border-color:var(--color-accent-primary); color:var(--color-accent-primary); }
+
+        .wiki-sidebar { grid-row:2; grid-column:1; position:sticky; top:52px; height:calc(100vh - 52px); overflow-y:auto; padding:var(--space-6) var(--space-4) var(--space-6) var(--space-6); border-right:1px solid var(--color-border); background:var(--color-bg-secondary); scrollbar-width:thin; }
+        .sidebar-label { font-size:var(--text-xs); font-weight:var(--font-semibold); text-transform:uppercase; letter-spacing:0.08em; color:var(--color-text-tertiary); margin-bottom:var(--space-3); padding:0 var(--space-2); }
+        .sidebar-nav { list-style:none; }
+        .sidebar-nav li + li { margin-top:2px; }
+        .sidebar-nav a { display:block; padding:var(--space-2) var(--space-3); border-radius:var(--radius-md); font-size:var(--text-sm); color:var(--color-text-secondary); text-decoration:none; transition:all var(--transition-fast); line-height:1.4; }
+        .sidebar-nav a:hover { background:var(--color-bg-card-hover); color:var(--color-text-primary); }
+        .sidebar-nav a.active { background:rgba(80,0,171,.08); color:var(--color-accent-primary); font-weight:var(--font-medium); }
+
+        .wiki-main { grid-row:2; grid-column:2; padding:var(--space-10) var(--space-12); max-width:960px; }
+        .wiki-section { margin-bottom:var(--space-16); scroll-margin-top:68px; }
+        .wiki-section + .wiki-section { padding-top:var(--space-10); border-top:1px solid var(--color-border); }
+        .wiki-section h2 { font-family:var(--font-family-headings); font-size:var(--text-3xl); font-weight:var(--font-semibold); color:var(--color-text-primary); margin-bottom:var(--space-6); line-height:var(--leading-tight); }
+        .wiki-section h3 { font-size:var(--text-lg); font-weight:var(--font-semibold); color:var(--color-text-primary); margin:var(--space-8) 0 var(--space-4); }
+        .wiki-section p { color:var(--color-text-secondary); line-height:var(--leading-relaxed); margin-bottom:var(--space-4); }
+
+        .wiki-table-wrap { overflow-x:auto; margin:var(--space-4) 0 var(--space-6); border-radius:var(--radius-lg); border:1px solid var(--color-border); }
+        .wiki-table { width:100%; border-collapse:collapse; font-size:var(--text-sm); }
+        .wiki-table th { background:var(--color-bg-secondary); font-weight:var(--font-semibold); color:var(--color-text-primary); padding:var(--space-3) var(--space-4); text-align:left; border-bottom:1px solid var(--color-border); white-space:nowrap; }
+        .wiki-table td { padding:var(--space-3) var(--space-4); color:var(--color-text-secondary); border-bottom:1px solid var(--color-border); vertical-align:top; line-height:var(--leading-relaxed); }
+        .wiki-table tr:last-child td { border-bottom:none; }
+        .wiki-table tr:hover td { background:var(--color-bg-secondary); }
+        .wiki-table td strong { color:var(--color-text-primary); font-weight:var(--font-medium); }
+
+        .wiki-note { background:rgba(80,0,171,.04); border-left:3px solid var(--color-accent-primary); border-radius:0 var(--radius-md) var(--radius-md) 0; padding:var(--space-4) var(--space-5); margin:var(--space-4) 0; font-size:var(--text-sm); color:var(--color-text-secondary); line-height:var(--leading-relaxed); }
+        .wiki-note strong { color:var(--color-text-primary); }
+        .wiki-card { background:var(--color-bg-card); border:1px solid var(--color-border); border-radius:var(--radius-xl); padding:var(--space-6); margin:var(--space-6) 0; }
+        .wiki-list { list-style:none; margin:var(--space-3) 0; }
+        .wiki-list li { padding:var(--space-1) 0 var(--space-1) var(--space-5); position:relative; font-size:var(--text-sm); color:var(--color-text-secondary); line-height:var(--leading-relaxed); }
+        .wiki-list li::before { content:'→'; position:absolute; left:0; color:var(--color-accent-primary); font-size:var(--text-xs); top:6px; }
+        .wiki-list li strong { color:var(--color-text-primary); }
+
+        .stat-cards { display:grid; grid-template-columns:repeat(3,1fr); gap:var(--space-4); margin:var(--space-6) 0; }
+        .stat-card { background:var(--color-bg-card); border:1px solid var(--color-border); border-radius:var(--radius-xl); padding:var(--space-5); text-align:center; }
+        .stat-card__number { font-family:var(--font-family-headings); font-size:var(--text-2xl); font-weight:var(--font-bold); color:var(--color-text-primary); margin-bottom:var(--space-1); }
+        .stat-card__label { font-size:var(--text-xs); color:var(--color-text-tertiary); }
+
+        .badge { display:inline-flex; align-items:center; gap:var(--space-2); padding:3px 10px; border-radius:var(--radius-full); font-size:var(--text-xs); font-weight:var(--font-medium); }
+        .badge--green { background:rgb(205,255,201); color:rgba(0,0,0,0.7); }
+        .badge--red { background:rgb(255,201,199); color:rgba(0,0,0,0.7); }
+        .badge--yellow { background:rgb(253,255,184); color:rgba(0,0,0,0.7); }
+        .badge--blue { background:rgb(201,224,255); color:rgba(0,0,0,0.7); }
+        .badge--purple { background:rgba(80,0,171,.1); color:var(--color-accent-primary); }
+
+        .section-meta { display:flex; flex-wrap:wrap; gap:var(--space-2); align-items:center; margin-bottom:var(--space-6); }
+
+        .pie-chart { display:flex; align-items:center; gap:var(--space-8); margin:var(--space-6) 0; }
+        .pie-visual { width:160px; height:160px; border-radius:50%; background:conic-gradient(var(--color-accent-primary) 0% 35%, var(--color-accent-secondary) 35% 37%, var(--color-warning) 37% 100%); flex-shrink:0; position:relative; }
+        .pie-visual::after { content:''; position:absolute; inset:30px; border-radius:50%; background:var(--color-bg-primary); }
+        .pie-legend { display:flex; flex-direction:column; gap:var(--space-2); }
+        .pie-legend-item { display:flex; align-items:center; gap:var(--space-2); font-size:var(--text-sm); color:var(--color-text-secondary); }
+        .pie-dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
+
+        /* Creative gallery */
+        .creative-gallery { display:grid; grid-template-columns:repeat(auto-fill, minmax(220px, 1fr)); gap:var(--space-4); margin:var(--space-6) 0; }
+        .creative-card { background:var(--color-bg-card); border:1px solid var(--color-border); border-radius:var(--radius-xl); overflow:hidden; transition:all var(--transition-fast); }
+        .creative-card:hover { border-color:var(--color-border-light); box-shadow:0 4px 12px rgba(0,0,0,0.06); }
+        .creative-card img { width:100%; height:240px; object-fit:cover; display:block; }
+        .creative-card__info { padding:var(--space-4); }
+        .creative-card__title { font-size:var(--text-sm); font-weight:var(--font-semibold); color:var(--color-text-primary); margin-bottom:var(--space-2); line-height:1.3; }
+        .creative-card__meta { font-size:var(--text-xs); color:var(--color-text-tertiary); line-height:var(--leading-relaxed); }
+        .creative-card__meta strong { color:var(--color-text-secondary); }
+
+        /* Feedback editable */
+        .feedback-block { background:var(--color-bg-card); border:1px solid var(--color-border); border-radius:var(--radius-xl); padding:var(--space-5); margin:var(--space-3) 0; }
+        .feedback-item { padding:var(--space-3) var(--space-4); border:1px dashed var(--color-border-light); border-radius:var(--radius-md); margin-bottom:var(--space-2); font-size:var(--text-sm); color:var(--color-text-secondary); line-height:var(--leading-relaxed); min-height:40px; cursor:text; transition:border-color var(--transition-fast); }
+        .feedback-item:hover { border-color:var(--color-accent-primary); }
+        .feedback-item:focus { outline:none; border-color:var(--color-accent-primary); border-style:solid; background:rgba(80,0,171,.02); }
+        .feedback-item:last-child { margin-bottom:0; }
+        .feedback-item:empty::before { content:attr(data-placeholder); color:var(--color-text-tertiary); font-style:italic; }
+        .feedback-hint { font-size:var(--text-xs); color:var(--color-text-tertiary); margin-bottom:var(--space-3); display:flex; align-items:center; gap:var(--space-2); }
+        .feedback-hint svg { flex-shrink:0; }
+
+        /* Comment system */
+        .section-footer { display:flex; align-items:center; justify-content:flex-end; margin-top:var(--space-6); padding-top:var(--space-4); border-top:1px solid var(--color-border); gap:var(--space-2); }
+        .comment-toggle-btn { display:inline-flex; align-items:center; gap:6px; padding:6px 14px; border:1px solid var(--color-border-light); border-radius:var(--radius-full); background:transparent; color:var(--color-text-tertiary); font-size:var(--text-xs); font-family:var(--font-family); cursor:pointer; transition:all var(--transition-fast); }
+        .comment-toggle-btn:hover { color:var(--color-text-primary); border-color:var(--color-border); background:var(--color-bg-card-hover); }
+        .comment-toggle-btn.has-comments { color:var(--color-accent-primary); border-color:rgba(80,0,171,.3); background:rgba(80,0,171,.06); }
+        .comment-count { display:inline-flex; align-items:center; justify-content:center; min-width:18px; height:18px; padding:0 5px; background:var(--color-accent-primary); color:#fff; border-radius:var(--radius-full); font-size:11px; font-weight:var(--font-bold); }
+        .comment-panel { display:none; margin-top:var(--space-4); background:var(--color-bg-secondary); border:1px solid var(--color-border); border-radius:var(--radius-xl); padding:var(--space-5); }
+        .comment-panel.open { display:block; }
+        .comment-item { padding:var(--space-3) var(--space-4); background:var(--color-bg-card); border-radius:var(--radius-lg); margin-bottom:var(--space-2); border:1px solid var(--color-border); }
+        .comment-item__header { display:flex; justify-content:space-between; align-items:center; margin-bottom:var(--space-1); }
+        .comment-item__author { font-weight:var(--font-semibold); color:var(--color-text-primary); font-size:var(--text-xs); }
+        .comment-item__date { color:var(--color-text-tertiary); font-size:11px; }
+        .comment-item__text { color:var(--color-text-secondary); font-size:var(--text-sm); line-height:var(--leading-relaxed); white-space:pre-wrap; }
+        .comment-delete { background:none; border:none; cursor:pointer; color:var(--color-text-tertiary); font-size:12px; padding:0 4px; }
+        .comment-delete:hover { color:#dc2626; }
+        .comment-empty { font-size:var(--text-sm); color:var(--color-text-tertiary); margin-bottom:var(--space-4); font-style:italic; }
+        .comment-form-wrap { margin-top:var(--space-4); padding-top:var(--space-4); border-top:1px solid var(--color-border); }
+        .comment-form-label { font-size:var(--text-xs); font-weight:var(--font-semibold); color:var(--color-text-secondary); margin-bottom:var(--space-2); display:block; }
+        .comment-form-row { display:flex; gap:var(--space-2); margin-bottom:var(--space-2); }
+        .comment-input, .comment-textarea { width:100%; padding:8px 12px; border:1px solid var(--color-border-light); border-radius:var(--radius-md); font-family:var(--font-family); font-size:var(--text-sm); color:var(--color-text-primary); background:var(--color-bg-card); box-sizing:border-box; }
+        .comment-input:focus, .comment-textarea:focus { outline:none; border-color:var(--color-accent-primary); }
+        .comment-textarea { resize:vertical; min-height:80px; }
+        .comment-submit { padding:8px 18px; background:var(--color-accent-primary); color:#fff; border:none; border-radius:var(--radius-md); font-family:var(--font-family); font-size:var(--text-sm); font-weight:var(--font-medium); cursor:pointer; transition:opacity var(--transition-fast); }
+        .comment-submit:hover { opacity:.85; }
+
+        @media (max-width:768px) {
+            .wiki-layout { grid-template-columns:1fr; }
+            .wiki-sidebar { display:none; }
+            .wiki-main { padding:var(--space-6) var(--space-4); grid-column:1; }
+            .stat-cards { grid-template-columns:1fr; }
+            .pie-chart { flex-direction:column; }
+            .creative-gallery { grid-template-columns:repeat(2,1fr); }
+        }
+        @media (max-width:480px) {
+            .creative-gallery { grid-template-columns:1fr; }
+        }
+    </style>
+</head>
+<body>
+<div class="wiki-layout">
+
+    <div class="topbar">
+        <div class="topbar-left">
+            <div>
+                <div class="topbar-title">Cursor Masterclass — Analýza kampaně</div>
+                <div class="topbar-meta">23. 3. 2026 · Port 7, Praha</div>
+            </div>
+        </div>
+        <div class="topbar-right">
+            <button class="topbar-btn" id="commentBtn" onclick="toggleAllComments()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                Komentáře
+            </button>
+        </div>
+    </div>
+
+    <aside class="wiki-sidebar">
+        <p class="sidebar-label">Analýza</p>
+        <ul class="sidebar-nav" id="sidebarNav">
+            <li><a href="#overview">1. Přehled</a></li>
+            <li><a href="#spend">2. Náklady</a></li>
+            <li><a href="#meta">3. Meta Ads</a></li>
+            <li><a href="#creatives">4. Vizuály Meta</a></li>
+            <li><a href="#linkedin">5. LinkedIn</a></li>
+            <li><a href="#email">6. Owned kanály</a></li>
+            <li><a href="#wins">7. Co fungovalo</a></li>
+            <li><a href="#fails">8. Co zlepšit</a></li>
+            <li><a href="#next">9. Doporučení</a></li>
+            <li><a href="#feedback">10. Poučení z akce</a></li>
+        </ul>
+    </aside>
+
+    <main class="wiki-main" id="wikiMain">
+
+        <!-- 1 -->
+        <section class="wiki-section" id="overview">
+            <h2>Cursor Masterclass 23. 3. 2026</h2>
+            <div class="section-meta">
+                <span class="badge badge--purple">Celodenní live workshop</span>
+                <span class="badge badge--blue">Port 7, Praha</span>
+                <span class="badge badge--green">Kompletní data</span>
+            </div>
+            <div class="stat-cards">
+                <div class="stat-card"><div class="stat-card__number">~136 450 Kč</div><div class="stat-card__label">Celkové náklady</div></div>
+                <div class="stat-card"><div class="stat-card__number">~49 635 Kč</div><div class="stat-card__label">Marketing spend</div></div>
+                <div class="stat-card"><div class="stat-card__number">86 815 Kč</div><div class="stat-card__label">Event (prostor + catering)</div></div>
+            </div>
+            <div class="section-footer"><button class="comment-toggle-btn" id="ctbtn-overview" onclick="toggleCommentPanel('overview')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Komentář</button></div>
+            <div class="comment-panel" id="cp-overview"></div>
+        </section>
+
+        <!-- 2 -->
+        <section class="wiki-section" id="spend">
+            <h2>Struktura nákladů</h2>
+            <div class="wiki-table-wrap"><table class="wiki-table">
+                <thead><tr><th>Položka</th><th>Částka</th><th>Pozn.</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>Meta Ads</strong></td><td>24 815 Kč</td><td></td></tr>
+                    <tr><td><strong>LinkedIn Ads</strong> (vč. video produkce)</td><td>~17 620 Kč</td><td>boost postů + videa (~330 USD)</td></tr>
+                    <tr><td><strong>Google Ads</strong> (odhad podílu)</td><td>~5 000 Kč</td><td>součást always-on kampaně</td></tr>
+                    <tr><td><strong>Tisk</strong></td><td>2 200 Kč</td><td>vč. DPH</td></tr>
+                    <tr><td><strong>Pronájem</strong> (Scott Weber)</td><td>55 744 Kč</td><td>vč. DPH</td></tr>
+                    <tr><td><strong>Catering</strong></td><td>31 071 Kč</td><td>vč. DPH</td></tr>
+                </tbody>
+            </table></div>
+
+            <h3>Rozložení</h3>
+            <div class="pie-chart">
+                <div class="pie-visual"></div>
+                <div class="pie-legend">
+                    <div class="pie-legend-item"><div class="pie-dot" style="background:var(--color-accent-primary)"></div><strong>Paid media</strong>&nbsp;— ~47 435 Kč (35 %)</div>
+                    <div class="pie-legend-item"><div class="pie-dot" style="background:var(--color-accent-secondary)"></div><strong>Tisk</strong>&nbsp;— 2 200 Kč (2 %)</div>
+                    <div class="pie-legend-item"><div class="pie-dot" style="background:var(--color-warning)"></div><strong>Event</strong>&nbsp;— 86 815 Kč (63 %)</div>
+                </div>
+            </div>
+            <div class="wiki-note"><strong>Insight:</strong> 65 % nákladů šlo do eventu samotného. Paid media tvoří méně než třetinu celkových nákladů.</div>
+            <div class="section-footer"><button class="comment-toggle-btn" id="ctbtn-spend" onclick="toggleCommentPanel('spend')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Komentář</button></div>
+            <div class="comment-panel" id="cp-spend"></div>
+        </section>
+
+        <!-- 3 -->
+        <section class="wiki-section" id="meta">
+            <h2>Meta Ads</h2>
+            <div class="section-meta">
+                <span class="badge badge--blue">1. 3. – 24. 3. 2026</span>
+                <span class="badge badge--purple">Spend: 24 815 Kč</span>
+                <span class="badge badge--yellow">5 ad setů</span>
+            </div>
+            <div class="wiki-table-wrap"><table class="wiki-table">
+                <thead><tr><th>Ad set</th><th>Spend</th><th>Impressions</th><th>Clicks</th><th>CPC</th><th>CPM</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>cursor_visual2</strong></td><td>~3 668 Kč</td><td>9 669</td><td>155</td><td>~23,7 Kč</td><td>~379 Kč</td></tr>
+                    <tr><td><strong>Video</strong> <span class="badge badge--green">Nej CPC</span></td><td>~3 451 Kč</td><td>10 424</td><td>227</td><td>~15,2 Kč</td><td>~331 Kč</td></tr>
+                    <tr><td><strong>cursor_visual34 (A)</strong></td><td>~1 319 Kč</td><td>3 282</td><td>61</td><td>~21,6 Kč</td><td>~402 Kč</td></tr>
+                    <tr><td><strong>cursor_visual34 (B)</strong></td><td>~636 Kč</td><td>1 439</td><td>27</td><td>~23,5 Kč</td><td>~442 Kč</td></tr>
+                    <tr><td><strong>cursor_visual34 (C)</strong> <span class="badge badge--green">Nej CPM</span></td><td>~8 632 Kč</td><td>33 729</td><td>424</td><td>~20,4 Kč</td><td>~256 Kč</td></tr>
+                </tbody>
+            </table></div>
+            <div class="wiki-note"><strong>Winner formáty:</strong> Video = nejlepší CPC (~15,2 Kč). Visual34 (C) = nejlepší CPM (~256 Kč) při největším objemu.</div>
+            <div class="section-footer"><button class="comment-toggle-btn" id="ctbtn-meta" onclick="toggleCommentPanel('meta')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Komentář</button></div>
+            <div class="comment-panel" id="cp-meta"></div>
+        </section>
+
+        <!-- 4 -->
+        <section class="wiki-section" id="creatives">
+            <h2>Top vizuály Meta</h2>
+            <p>Kreativy s nejvíce impresemi. Dobré prokliky, ale <strong>nekonvertovaly na landing page</strong> — traffic umíme dostat, LP potřebuje optimalizaci.</p>
+
+            <div class="creative-gallery">
+                <div class="creative-card">
+                    <img src="assets/meta-keyboard.png" alt="ChatGPT vám poradí. Cursor to za vás udělá." loading="lazy">
+                    <div class="creative-card__info">
+                        <div class="creative-card__title">"ChatGPT vám poradí. Cursor to za vás udělá."</div>
+                        <div class="creative-card__meta"><strong>4 771</strong> impressions · <strong>83</strong> kliků<br>CTR <strong>1,74 %</strong> · CPC <strong>17,67 Kč</strong></div>
+                    </div>
+                </div>
+                <div class="creative-card">
+                    <img src="assets/meta-zaneta-testimonial.png" alt="Žaneta testimonial" loading="lazy">
+                    <div class="creative-card__info">
+                        <div class="creative-card__title">Žaneta testimonial (social proof)</div>
+                        <div class="creative-card__meta"><strong>3 452</strong> impressions · <strong>57</strong> kliků<br>CTR <strong>1,65 %</strong> · CPC <strong>25,31 Kč</strong></div>
+                    </div>
+                </div>
+                <div class="creative-card">
+                    <img src="assets/meta-statue-cursor.png" alt="Naučte se Cursor" loading="lazy">
+                    <div class="creative-card__info">
+                        <div class="creative-card__title">"Naučte se Cursor" (purple gradient)</div>
+                        <div class="creative-card__meta"><strong>3 282</strong> impressions · <strong>61</strong> kliků<br>CTR <strong>1,86 %</strong> · CPC <strong>21,62 Kč</strong></div>
+                    </div>
+                </div>
+                <div class="creative-card">
+                    <img src="assets/meta-ad-visual.png" alt="1 den s Cursorem" loading="lazy">
+                    <div class="creative-card__info">
+                        <div class="creative-card__title">"1 den s Cursorem" (hlavní promo)</div>
+                        <div class="creative-card__meta">Hlavní vizuál kampaně</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="wiki-note" style="border-left-color:var(--color-warning);"><strong>Hlavní závěr:</strong> Proklikovost je dobrá (1,65–1,86 % link CTR). Problém není v kreativách, ale v konverzi na LP. Příště: jasný hero, social proof, urgency, jednoduchý checkout.</div>
+            <div class="section-footer"><button class="comment-toggle-btn" id="ctbtn-creatives" onclick="toggleCommentPanel('creatives')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Komentář</button></div>
+            <div class="comment-panel" id="cp-creatives"></div>
+        </section>
+
+        <!-- 5 -->
+        <section class="wiki-section" id="linkedin">
+            <h2>LinkedIn — boostované posty</h2>
+
+            <div class="creative-gallery">
+                <div class="creative-card">
+                    <img src="assets/li-carousel-use-cases.png" alt="Cursor use cases carousel" loading="lazy">
+                    <div class="creative-card__info">
+                        <div class="creative-card__title">Cursor: use cases <span class="badge badge--green">Winner</span></div>
+                        <div class="creative-card__meta"><strong>2 395</strong> eng. · <strong>811</strong> kliků · CTR <strong>4,4 %</strong><br>Cena/eng. <strong>0,06 EUR</strong> · ~144 EUR</div>
+                    </div>
+                </div>
+                <div class="creative-card">
+                    <img src="assets/li-vibe-coder-meme.png" alt="Vibe Coder meme" loading="lazy">
+                    <div class="creative-card__info">
+                        <div class="creative-card__title">Vibe Coder meme</div>
+                        <div class="creative-card__meta"><strong>276</strong> eng. · <strong>255</strong> kliků · CTR <strong>4,6 %</strong><br>Cena/eng. <strong>0,18 EUR</strong> · ~50 EUR</div>
+                    </div>
+                </div>
+                <div class="creative-card">
+                    <img src="assets/li-event-post.png" alt="LinkedIn Event" loading="lazy">
+                    <div class="creative-card__info">
+                        <div class="creative-card__title">LinkedIn Event <span class="badge badge--red">Nejdražší</span></div>
+                        <div class="creative-card__meta"><strong>367</strong> eng. · <strong>361</strong> kliků · CTR <strong>1,7 %</strong><br>Cena/eng. <strong>0,52 EUR</strong> · ~191 EUR</div>
+                    </div>
+                </div>
+                <div class="creative-card">
+                    <img src="assets/li-video-post.png" alt="Video promo" loading="lazy">
+                    <div class="creative-card__info">
+                        <div class="creative-card__title">Video promo (organický)</div>
+                        <div class="creative-card__meta"><strong>61</strong> eng. · <strong>36</strong> kliků · CTR <strong>1,5 %</strong><br>1 021 views · průměr 13s</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="wiki-card">
+                <h4>Klíčové závěry</h4>
+                <ul class="wiki-list">
+                    <li><strong>Carousel "use cases"</strong> = jednoznačný winner — nejvyšší objem, nejnižší cena (0,06 EUR), silné CTR.</li>
+                    <li><strong>Meme vizuál</strong> — nejvyšší CTR (4,6 %), ale 3× dražší engagement.</li>
+                    <li><strong>Event post</strong> — nejhorší performance. Event formát má nižší klikatelnost.</li>
+                    <li><strong>Boost příspěvků na LinkedIn</strong> je překvapivě efektivní u content-first formátů.</li>
+                    <li><strong>Video na Meta i LinkedIn:</strong> Konverze minimální (1 člověk), ale awareness value tam je. Příště kratší formáty s jasnějším CTA.</li>
+                </ul>
+            </div>
+            <div class="section-footer"><button class="comment-toggle-btn" id="ctbtn-linkedin" onclick="toggleCommentPanel('linkedin')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Komentář</button></div>
+            <div class="comment-panel" id="cp-linkedin"></div>
+        </section>
+
+        <!-- 6 -->
+        <section class="wiki-section" id="email">
+            <h2>Owned kanály</h2>
+            <p>Traffic přicházel i z <strong>follow-up emailů po webinářích</strong>, <strong>newsletterů</strong> (únor + březen) a <strong>dalšího mailingu</strong> (B2B promo). Velká část účastníků přišla z organických kanálů — emailing, komunita, word-of-mouth.</p>
+
+            <h3>Slevové kódy</h3>
+            <div class="wiki-table-wrap"><table class="wiki-table">
+                <thead><tr><th>Kód</th><th>Sleva</th><th>Využití</th><th>Poznámka</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>AI Edu kód</strong></td><td>10 %</td><td><strong>9 lidí</strong></td><td>Jasná atribuce — AI Edu komunita</td></tr>
+                    <tr><td><strong>Obecný kód</strong></td><td>12 %</td><td><strong>15 lidí</strong></td><td>Across všechny produkty — nelze přiřadit</td></tr>
+                </tbody>
+            </table></div>
+
+            <div class="wiki-note"><strong>K CPL/CAC:</strong> Paid spend fungoval spíš jako amplifikátor organického dosahu než jako primární akviziční kanál. Čistý paid CPL proto není relevantní metrika pro tuto kampaň.</div>
+            <div class="section-footer"><button class="comment-toggle-btn" id="ctbtn-email" onclick="toggleCommentPanel('email')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Komentář</button></div>
+            <div class="comment-panel" id="cp-email"></div>
+        </section>
+
+        <!-- 7 -->
+        <section class="wiki-section" id="wins">
+            <h2>Co fungovalo</h2>
+            <ul class="wiki-list">
+                <li><strong>Carousel formát na LinkedInu</strong> — dominantní performance; low-cost, high-click.</li>
+                <li><strong>Boost příspěvků na LinkedIn</strong> — překvapivě efektivní a levný kanál pro content-first formáty.</li>
+                <li><strong>Video kreativy na Metě</strong> — nejnižší CPC ze všech ad setů.</li>
+                <li><strong>AI Edu slevový kód</strong> — 9 lidí s jasnou atribucí = silný proof owned audience.</li>
+                <li><strong>Škálování jednoho ad setu</strong> (visual34 C) — nejlepší CPM při největším objemu.</li>
+                <li><strong>Meme/relatable obsah</strong> — vysoká klikatelnost, atraktivní pro cold audience.</li>
+                <li><strong>Proklikovost kreativ celkově</strong> — link CTR 1,65–1,86 % na Metě, 4,4–4,6 % na LinkedIn boostech.</li>
+            </ul>
+            <div class="section-footer"><button class="comment-toggle-btn" id="ctbtn-wins" onclick="toggleCommentPanel('wins')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Komentář</button></div>
+            <div class="comment-panel" id="cp-wins"></div>
+        </section>
+
+        <!-- 8 -->
+        <section class="wiki-section" id="fails">
+            <h2>Co nefungovalo / co zlepšit</h2>
+            <ul class="wiki-list">
+                <li><strong>Landing page konverze</strong> — kreativy generují kliky, ale LP nekonvertuje. Hlavní bottleneck.</li>
+                <li><strong>LinkedIn event post</strong> — nejdražší engagement (0,52 EUR), nízké CTR (1,7 %).</li>
+                <li><strong>Smíšený intent</strong> v jednom postu (webinář + masterclass) → nelze čistě atribuovat.</li>
+                <li><strong>Malé ad sety na Metě</strong> (visual34 A/B) — vysoký CPM, nízký objem.</li>
+                <li><strong>Video na LinkedIn</strong> — minimální konverze (1 člověk), ale awareness value je tam.</li>
+            </ul>
+            <div class="section-footer"><button class="comment-toggle-btn" id="ctbtn-fails" onclick="toggleCommentPanel('fails')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Komentář</button></div>
+            <div class="comment-panel" id="cp-fails"></div>
+        </section>
+
+        <!-- 9 -->
+        <section class="wiki-section" id="next">
+            <h2>Doporučení pro další launch</h2>
+            <h3>Co škálovat</h3>
+            <ul class="wiki-list">
+                <li><strong>Carousel/use-case formát na LinkedIn</strong> jako primární paid kreativu.</li>
+                <li><strong>Video-first na Metě</strong> — pokračovat, testovat délky a hooky.</li>
+                <li><strong>Boost příspěvků na LinkedIn</strong> systematicky od začátku kampaně.</li>
+                <li><strong>Slevové kódy per kanál</strong> — AI Edu kód fungoval; příště i Meta, LI, NL kód.</li>
+            </ul>
+            <h3>Co změnit</h3>
+            <ul class="wiki-list">
+                <li><strong>Landing page</strong> — hlavní priorita. Jasný hero, social proof, urgency, jednoduchý checkout, A/B test.</li>
+                <li><strong>Konsolidovat Meta ad sety</strong> — méně ad setů s větším budgetem.</li>
+                <li><strong>UTM na všechny touchpointy</strong> — reminder, onboarding, follow-up, Circle.</li>
+                <li><strong>Event post jen podpůrný</strong> — neboostovat jako primární performance kanál.</li>
+            </ul>
+            <h3>Co testovat příště</h3>
+            <ul class="wiki-list">
+                <li><strong>Meme kreativy jako A/B</strong> — měřit nejen CTR, ale downstream konverze.</li>
+                <li><strong>Video na LinkedIn</strong> — kratší formáty s jasnějším CTA.</li>
+                <li><strong>Retargeting</strong> — kdo klikl, ale nekonvertoval → urgency / testimonial / limited seats.</li>
+            </ul>
+            <div class="section-footer"><button class="comment-toggle-btn" id="ctbtn-next" onclick="toggleCommentPanel('next')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Komentář</button></div>
+            <div class="comment-panel" id="cp-next"></div>
+        </section>
+
+        <!-- 10 -->
+        <section class="wiki-section" id="feedback">
+            <h2>Poučení z akce</h2>
+            <p>Klikněte na pole a napište přímo. Vše se ukládá automaticky do prohlížeče.</p>
+
+            <h3>Co se povedlo</h3>
+            <div class="feedback-hint"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg> Klikněte a pište</div>
+            <div class="feedback-block">
+                <div class="feedback-item" contenteditable="true" data-feedback="fb-1" data-placeholder="Co se povedlo #1…"></div>
+                <div class="feedback-item" contenteditable="true" data-feedback="fb-2" data-placeholder="Co se povedlo #2…"></div>
+                <div class="feedback-item" contenteditable="true" data-feedback="fb-3" data-placeholder="Co se povedlo #3…"></div>
+            </div>
+
+            <h3>Co příště udělat jinak</h3>
+            <div class="feedback-block">
+                <div class="feedback-item" contenteditable="true" data-feedback="fb-4" data-placeholder="Co udělat jinak #1…"></div>
+                <div class="feedback-item" contenteditable="true" data-feedback="fb-5" data-placeholder="Co udělat jinak #2…"></div>
+                <div class="feedback-item" contenteditable="true" data-feedback="fb-6" data-placeholder="Co udělat jinak #3…"></div>
+            </div>
+
+            <h3>Organizační poznámky</h3>
+            <div class="feedback-block">
+                <div class="feedback-item" contenteditable="true" data-feedback="fb-7" data-placeholder="Poznámka k organizaci #1…"></div>
+                <div class="feedback-item" contenteditable="true" data-feedback="fb-8" data-placeholder="Poznámka k organizaci #2…"></div>
+            </div>
+
+            <h3>Feedback účastníků</h3>
+            <div class="feedback-block">
+                <div class="feedback-item" contenteditable="true" data-feedback="fb-9" data-placeholder="Highlight z feedbacku #1…"></div>
+                <div class="feedback-item" contenteditable="true" data-feedback="fb-10" data-placeholder="Highlight z feedbacku #2…"></div>
+                <div class="feedback-item" contenteditable="true" data-feedback="fb-11" data-placeholder="Highlight z feedbacku #3…"></div>
+            </div>
+
+            <div class="section-footer"><button class="comment-toggle-btn" id="ctbtn-feedback" onclick="toggleCommentPanel('feedback')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Komentář</button></div>
+            <div class="comment-panel" id="cp-feedback"></div>
+        </section>
+
+    </main>
+</div>
+
+<script>
+const SECTIONS = ['overview','spend','meta','creatives','linkedin','email','wins','fails','next','feedback'];
+
+/* Feedback auto-save */
+document.querySelectorAll('[data-feedback]').forEach(el => {
+    const k = el.getAttribute('data-feedback');
+    const saved = localStorage.getItem('cmr_'+k);
+    if (saved) el.textContent = saved;
+    el.addEventListener('blur', () => localStorage.setItem('cmr_'+k, el.textContent));
+});
+
+/* Comments */
+function getComments(id) { try { return JSON.parse(localStorage.getItem('cmr_c_'+id)||'[]'); } catch { return []; } }
+function saveComments(id,a) { localStorage.setItem('cmr_c_'+id, JSON.stringify(a)); }
+function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+function renderCommentPanel(id) {
+    const p = document.getElementById('cp-'+id), c = getComments(id), la = localStorage.getItem('cmr_last_author')||'';
+    const ch = c.length===0 ? '<p class="comment-empty">Zatím žádné komentáře.</p>' : c.map((x,i)=>`<div class="comment-item"><div class="comment-item__header"><span class="comment-item__author">${esc(x.author)}</span><span style="display:flex;gap:6px;align-items:center"><span class="comment-item__date">${esc(x.date)}</span><button class="comment-delete" onclick="deleteComment('${id}',${i})">×</button></span></div><div class="comment-item__text">${esc(x.text)}</div></div>`).join('');
+    p.innerHTML = `<div>${ch}</div><div class="comment-form-wrap"><label class="comment-form-label">Přidat komentář</label><div class="comment-form-row"><input class="comment-input" id="ca-${id}" placeholder="Jméno" value="${esc(la)}" style="flex:1"></div><div class="comment-form-row"><textarea class="comment-textarea" id="ct-${id}" placeholder="Komentář, nápad nebo otázka…"></textarea></div><button class="comment-submit" onclick="addComment('${id}')">Přidat</button></div>`;
+}
+
+function toggleCommentPanel(id) {
+    const p = document.getElementById('cp-'+id), b = document.getElementById('ctbtn-'+id), o = p.classList.toggle('open');
+    if (o) renderCommentPanel(id);
+    b.innerHTML = o ? `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="18 15 12 9 6 15"/></svg> Skrýt ${badgeHtml(id)}` : `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Komentář ${badgeHtml(id)}`;
+}
+
+function badgeHtml(id) { const n = getComments(id).length; return n>0 ? `<span class="comment-count">${n}</span>` : ''; }
+
+function addComment(id) {
+    const a = (document.getElementById('ca-'+id).value.trim())||'Anonym', t = document.getElementById('ct-'+id).value.trim();
+    if (!t) { document.getElementById('ct-'+id).focus(); return; }
+    localStorage.setItem('cmr_last_author', a);
+    const c = getComments(id), now = new Date().toLocaleDateString('cs-CZ',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});
+    c.push({author:a,text:t,date:now}); saveComments(id,c); renderCommentPanel(id); updateCommentBtn(id);
+}
+
+function deleteComment(id,i) { const c = getComments(id); c.splice(i,1); saveComments(id,c); renderCommentPanel(id); updateCommentBtn(id); }
+
+function updateCommentBtn(id) {
+    const b = document.getElementById('ctbtn-'+id); if (!b) return;
+    const n = getComments(id).length, p = document.getElementById('cp-'+id), o = p.classList.contains('open');
+    b.classList.toggle('has-comments', n>0);
+    if (!o) b.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Komentář ${badgeHtml(id)}`;
+}
+
+function toggleAllComments() {
+    const b = document.getElementById('commentBtn'), any = SECTIONS.some(id=>document.getElementById('cp-'+id)?.classList.contains('open'));
+    SECTIONS.forEach(id=>{const p=document.getElementById('cp-'+id);if(!p)return;if(any){p.classList.remove('open');}else{p.classList.add('open');renderCommentPanel(id);}updateCommentBtn(id);});
+    b.classList.toggle('active',!any);
+    b.innerHTML = !any ? '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="18 15 12 9 6 15"/></svg> Skrýt vše' : '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Komentáře';
+}
+
+/* Sidebar */
+function initSidebar() {
+    const links = document.querySelectorAll('#sidebarNav a'), sections = document.querySelectorAll('.wiki-section');
+    const obs = new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){const id=e.target.id;links.forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+id));}});},{rootMargin:'-15% 0px -70% 0px'});
+    sections.forEach(s=>obs.observe(s));
+}
+
+document.addEventListener('DOMContentLoaded',()=>{SECTIONS.forEach(id=>updateCommentBtn(id));initSidebar();});
+</script>
+</body>
+</html>
