@@ -175,10 +175,11 @@
             <li><a href="#creatives">4. Vizuály Meta</a></li>
             <li><a href="#linkedin">5. LinkedIn</a></li>
             <li><a href="#email">6. Owned kanály</a></li>
-            <li><a href="#wins">7. Co fungovalo</a></li>
-            <li><a href="#fails">8. Co zlepšit</a></li>
-            <li><a href="#next">9. Doporučení</a></li>
-            <li><a href="#feedback">10. Poučení z akce</a></li>
+            <li><a href="#posthog">7. Web traffic</a></li>
+            <li><a href="#wins">8. Co fungovalo</a></li>
+            <li><a href="#fails">9. Co zlepšit</a></li>
+            <li><a href="#next">10. Doporučení</a></li>
+            <li><a href="#feedback">11. Poučení z akce</a></li>
         </ul>
     </aside>
 
@@ -363,6 +364,29 @@
         </section>
 
         <!-- 7 -->
+        <section class="wiki-section" id="posthog">
+            <h2>Web traffic (PostHog)</h2>
+            <p>Orientační přehled návštěvnosti LP podle kanálů. Čísla jsou <strong>nižší než reálné konverze</strong> (cookie consent, adblocky, chybějící UTM), ale ukazují rozložení traffic zdrojů.</p>
+
+            <div class="wiki-table-wrap"><table class="wiki-table">
+                <thead><tr><th>Kanál</th><th>Visitors</th><th>Conversions</th><th>CR</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>Direct</strong></td><td>21</td><td>14</td><td>38,1 %</td></tr>
+                    <tr><td><strong>Organic Shopping</strong></td><td>13</td><td>10</td><td>46,2 %</td></tr>
+                    <tr><td><strong>Paid Search</strong> (Google)</td><td>6</td><td>3</td><td>50,0 %</td></tr>
+                    <tr><td><strong>Organic Social</strong></td><td>5</td><td>2</td><td>40,0 %</td></tr>
+                    <tr><td><strong>Email</strong></td><td>2</td><td>1</td><td>50,0 %</td></tr>
+                    <tr><td><strong>Paid Social</strong></td><td>1</td><td>1</td><td>100 %</td></tr>
+                    <tr><td><strong>Referral</strong></td><td>5</td><td>0</td><td>0 %</td></tr>
+                </tbody>
+            </table></div>
+
+            <div class="wiki-note" style="border-left-color:var(--color-warning);"><strong>Pozor:</strong> PostHog čísla jsou výrazně nižší než reálné konverze z Meta/LI/emailingu — cookie consent, adblocky, rozdílné atribuční modely. Berte jako directional trend, ne absolutní čísla.<br><br><strong>Takeaway:</strong> Lidé přicházeli z více kanálů — Direct, Google (organic i paid) a organic social tvoří dohromady silný podíl. Paid social v PostHogu zachytil minimum, protože většina konverzí se atribuuje přímo v Meta/LinkedIn.</div>
+            <div class="section-footer"><button class="comment-toggle-btn" id="ctbtn-posthog" onclick="toggleCommentPanel('posthog')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Komentář</button></div>
+            <div class="comment-panel" id="cp-posthog"></div>
+        </section>
+
+        <!-- 8 -->
         <section class="wiki-section" id="wins">
             <h2>Co fungovalo</h2>
             <ul class="wiki-list">
@@ -460,7 +484,7 @@
 </div>
 
 <script>
-const SECTIONS = ['overview','spend','meta','creatives','linkedin','email','wins','fails','next','feedback'];
+const SECTIONS = ['overview','spend','meta','creatives','linkedin','email','posthog','wins','fails','next','feedback'];
 
 /* Feedback auto-save */
 document.querySelectorAll('[data-feedback]').forEach(el => {
