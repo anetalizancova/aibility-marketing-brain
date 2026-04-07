@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>LP v1 — Dark Premium</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Syne:wght@600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: oklch(14% 0.01 70);
+      --surface: oklch(19% 0.012 70);
+      --surface-up: oklch(23% 0.012 70);
+      --text: oklch(90% 0.01 70);
+      --text-dim: oklch(60% 0.01 70);
+      --border: oklch(25% 0.012 70);
+      --gold: oklch(78% 0.145 75);
+      --gold-dim: oklch(55% 0.1 75);
+      --gold-bg: oklch(22% 0.03 75);
+      --radius: 14px;
+      --radius-sm: 8px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Instrument Sans', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+      font-size: 16px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    h1, h2, h3 {
+      font-family: 'Syne', system-ui, sans-serif;
+      line-height: 1.15;
+      letter-spacing: -0.035em;
+      font-weight: 700;
+    }
+
+    .container { max-width: 1000px; margin: 0 auto; padding: 0 24px; }
+    .narrow { max-width: 640px; margin: 0 auto; padding: 0 24px; }
+
+    /* NAV */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: oklch(14% 0.01 70 / 0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 0;
+    }
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .nav-brand {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 20px;
+      letter-spacing: -0.04em;
+      color: var(--text);
+    }
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    .nav-info {
+      font-size: 13px;
+      color: var(--text-dim);
+      display: none;
+    }
+    @media (min-width: 640px) { .nav-info { display: block; } }
+
+    /* BUTTONS */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 26px;
+      border-radius: var(--radius-sm);
+      font-weight: 700;
+      font-size: 15px;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+    .btn:hover { transform: translateY(-1px); }
+
+    .btn-gold {
+      background: var(--gold);
+      color: oklch(15% 0.02 70);
+    }
+    .btn-gold:hover { box-shadow: 0 6px 24px oklch(78% 0.14 75 / 0.2); }
+
+    .btn-large {
+      padding: 16px 36px;
+      font-size: 16px;
+      border-radius: var(--radius);
+    }
+    .btn-ghost {
+      background: transparent;
+      color: var(--text);
+      border: 1.5px solid var(--border);
+    }
+    .btn-ghost:hover { border-color: var(--gold); color: var(--gold); }
+
+    /* ===== HERO — centered, full-width (different from v2 split) ===== */
+    .hero {
+      padding: 72px 0 56px;
+      text-align: center;
+    }
+    .hero-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 5px 14px;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      font-weight: 600;
+      background: var(--gold-bg);
+      color: var(--gold);
+      margin-bottom: 24px;
+    }
+    .hero-tag .dot {
+      width: 6px; height: 6px;
+      background: var(--gold);
+      border-radius: 50%;
+      animation: pulse 2s ease infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+    .hero h1 {
+      font-size: clamp(1.9rem, 4vw, 2.8rem);
+      margin-bottom: 20px;
+      max-width: 620px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .hero h1 em {
+      font-style: normal;
+      color: var(--gold);
+    }
+    .hero-sub {
+      font-size: 1.15rem;
+      color: var(--text-dim);
+      max-width: 520px;
+      margin: 0 auto 32px;
+      line-height: 1.7;
+    }
+
+    /* Stats bar — key info at a glance */
+    .stats-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1px;
+      background: var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      max-width: 600px;
+      margin: 0 auto 32px;
+    }
+    .stat {
+      flex: 1;
+      min-width: 120px;
+      padding: 16px 12px;
+      background: var(--surface);
+      text-align: center;
+    }
+    .stat-value {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 1rem;
+      letter-spacing: -0.02em;
+      margin-bottom: 2px;
+    }
+    .stat-label {
+      font-size: 12px;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      font-weight: 600;
+    }
+
+    /* Price block hero */
+    .hero-price {
+      margin-bottom: 28px;
+    }
+    .price-old {
+      text-decoration: line-through;
+      color: var(--text-dim);
+      font-size: 1rem;
+      margin-right: 8px;
+    }
+    .price-big {
+      font-family: 'Syne', sans-serif;
+      font-size: 2.2rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--text);
+    }
+    .price-vat {
+      font-size: 0.85rem;
+      color: var(--text-dim);
+    }
+    .badge {
+      display: inline-block;
+      padding: 4px 10px;
+      font-size: 12px;
+      font-weight: 700;
+      border-radius: var(--radius-sm);
+      background: var(--gold-bg);
+      color: var(--gold);
+      margin-left: 8px;
+      vertical-align: middle;
+    }
+
+    .hero-ctas {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: center;
+      margin-bottom: 14px;
+    }
+    .hero-trust {
+      font-size: 13px;
+      color: var(--text-dim);
+    }
+
+    /* ===== SECTIONS ===== */
+    section { padding: 72px 0; }
+    section.raised { background: var(--surface); }
+    section.gold-section {
+      background: var(--gold);
+      color: oklch(15% 0.02 70);
+    }
+    section.gold-section h2 { color: oklch(15% 0.02 70); }
+    section.gold-section .text-muted { color: oklch(32% 0.04 70); }
+
+    .tag {
+      display: inline-block;
+      font-family: 'Syne', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 10px;
+    }
+    .section-title {
+      font-size: clamp(1.4rem, 2.5vw, 1.75rem);
+      margin-bottom: 10px;
+    }
+    .section-desc {
+      color: var(--text-dim);
+      font-size: 1.05rem;
+      max-width: 480px;
+    }
+    .section-header { margin-bottom: 40px; }
+    .section-header.center { text-align: center; }
+    .section-header.center .section-desc { margin: 0 auto; }
+
+    /* ===== BENEFITS — 2x2 grid cards (different from v2 strip) ===== */
+    .benefit-grid {
+      display: grid;
+      gap: 12px;
+    }
+    @media (min-width: 640px) { .benefit-grid { grid-template-columns: 1fr 1fr; } }
+
+    .benefit-card {
+      padding: 28px 24px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      transition: border-color 0.15s ease;
+    }
+    .benefit-card:hover { border-color: var(--gold-dim); }
+    .benefit-num {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: oklch(28% 0.015 70);
+      line-height: 1;
+      margin-bottom: 14px;
+    }
+    .benefit-card h3 {
+      font-family: 'Instrument Sans', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    .benefit-card p {
+      font-size: 0.9rem;
+      color: var(--text-dim);
+      line-height: 1.55;
+    }
+
+    /* ===== AUDIENCE — stacked full-width (different from v2 side-by-side) ===== */
+    .audience-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .audience-row {
+      display: flex;
+      gap: 24px;
+      padding: 24px;
+      border-radius: var(--radius);
+      align-items: flex-start;
+      flex-wrap: wrap;
+    }
+    .audience-row.yes {
+      background: oklch(20% 0.025 150);
+      border: 1px solid oklch(30% 0.04 150);
+    }
+    .audience-row.no {
+      background: var(--surface);
+      border: 1px solid var(--border);
+    }
+    .audience-row h3 {
+      font-family: 'Syne', sans-serif;
+      font-size: 0.95rem;
+      flex-shrink: 0;
+      min-width: 160px;
+      padding-top: 2px;
+    }
+    .audience-row ul {
+      list-style: none;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px 16px;
+    }
+    .audience-row li {
+      font-size: 0.9rem;
+      color: var(--text-dim);
+      padding-left: 20px;
+      position: relative;
+    }
+    .audience-row.yes li::before {
+      content: "+";
+      position: absolute;
+      left: 0;
+      font-weight: 800;
+      color: oklch(65% 0.15 150);
+    }
+    .audience-row.no li::before {
+      content: "—";
+      position: absolute;
+      left: 0;
+      color: var(--text-dim);
+    }
+
+    /* ===== PROGRAM — horizontal timeline (different from v2 vertical list) ===== */
+    .program-scroll {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+    @media (max-width: 767px) {
+      .program-scroll {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+    @media (max-width: 480px) {
+      .program-scroll {
+        grid-template-columns: 1fr;
+      }
+    }
+    .program-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px 20px;
+      position: relative;
+    }
+    .program-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--gold);
+      border-radius: var(--radius) var(--radius) 0 0;
+      opacity: 0;
+      transition: opacity 0.15s;
+    }
+    .program-card:hover::before { opacity: 1; }
+    .program-step {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: oklch(28% 0.015 70);
+      margin-bottom: 10px;
+    }
+    .program-card h4 {
+      font-family: 'Syne', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+      line-height: 1.25;
+    }
+    .program-card p {
+      font-size: 0.82rem;
+      color: var(--text-dim);
+      line-height: 1.5;
+    }
+
+    /* ===== INSTRUCTOR — horizontal, left-aligned ===== */
+    .instructor-flex {
+      display: flex;
+      gap: 32px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .instructor-photo {
+      flex-shrink: 0;
+      width: 120px;
+      height: 120px;
+      border-radius: var(--radius);
+      background: var(--surface-up);
+      border: 2px solid var(--border);
+    }
+    .instructor-name {
+      font-size: 1.3rem;
+      margin-bottom: 2px;
+    }
+    .instructor-role {
+      color: var(--gold);
+      font-weight: 600;
+      font-size: 0.9rem;
+      margin-bottom: 10px;
+    }
+    .instructor-bio {
+      color: var(--text-dim);
+      font-size: 0.95rem;
+      max-width: 440px;
+      line-height: 1.6;
+    }
+
+    /* QUOTE */
+    .quote-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--gold);
+      border-radius: var(--radius-sm);
+      padding: 28px 24px;
+      max-width: 560px;
+      margin: 0 auto;
+    }
+    .quote-card blockquote {
+      font-size: 1.05rem;
+      font-style: italic;
+      line-height: 1.65;
+      margin-bottom: 12px;
+      color: var(--text);
+    }
+    .quote-card cite {
+      font-style: normal;
+      font-size: 13px;
+      color: var(--text-dim);
+      font-weight: 600;
+    }
+
+    /* ===== PRICING — gold accent section (different from v2 dark box on light) ===== */
+    .pricing-wrap {
+      display: flex;
+      gap: 24px;
+      align-items: stretch;
+      flex-wrap: wrap;
+    }
+    @media (min-width: 640px) {
+      .pricing-wrap { flex-wrap: nowrap; }
+    }
+    .pricing-main {
+      flex: 1;
+      min-width: 280px;
+      background: var(--surface);
+      border: 2px solid var(--gold-dim);
+      border-radius: var(--radius);
+      padding: 36px 32px;
+    }
+    .pricing-side {
+      flex: 0 0 280px;
+      background: var(--gold-bg);
+      border-radius: var(--radius);
+      padding: 36px 28px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    @media (max-width: 639px) {
+      .pricing-side { flex: 1; min-width: 100%; }
+    }
+    .pricing-side h3 {
+      font-size: 1.1rem;
+      margin-bottom: 12px;
+      color: var(--gold);
+    }
+    .pricing-side p {
+      font-size: 0.9rem;
+      color: var(--text-dim);
+      line-height: 1.6;
+    }
+    .pricing-includes {
+      list-style: none;
+      margin: 20px 0;
+    }
+    .pricing-includes li {
+      padding: 8px 0 8px 20px;
+      position: relative;
+      font-size: 0.95rem;
+      color: var(--text-dim);
+      border-bottom: 1px solid var(--border);
+    }
+    .pricing-includes li:last-child { border: none; }
+    .pricing-includes li::before {
+      content: "~";
+      position: absolute;
+      left: 0;
+      color: var(--gold);
+      font-weight: 700;
+    }
+
+    /* FAQ */
+    details {
+      border-bottom: 1px solid var(--border);
+    }
+    details summary {
+      padding: 18px 0;
+      font-weight: 600;
+      cursor: pointer;
+      list-style: none;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.95rem;
+    }
+    details summary::after {
+      content: "+";
+      font-family: 'Syne', sans-serif;
+      font-size: 1.2rem;
+      color: var(--text-dim);
+    }
+    details[open] summary::after { content: "−"; }
+    details p {
+      padding-bottom: 18px;
+      color: var(--text-dim);
+      font-size: 0.9rem;
+      line-height: 1.65;
+    }
+
+    /* ===== FINAL CTA — gold accent block ===== */
+    .final-cta {
+      text-align: center;
+      padding: 72px 24px;
+      position: relative;
+    }
+    .final-cta h2 {
+      font-size: clamp(1.5rem, 3vw, 2rem);
+      margin-bottom: 10px;
+    }
+    .final-cta h2 em {
+      font-style: normal;
+      color: var(--gold);
+    }
+    .final-cta p {
+      color: var(--text-dim);
+      margin-bottom: 24px;
+      font-size: 1.05rem;
+    }
+
+    footer {
+      padding: 28px 0;
+      text-align: center;
+      font-size: 13px;
+      color: var(--text-dim);
+      border-top: 1px solid var(--border);
+    }
+    footer a { color: var(--text-dim); text-decoration: none; }
+    footer a:hover { color: var(--gold); }
+
+    @media (max-width: 639px) {
+      .hero { padding: 48px 0 40px; }
+      .hero h1 { font-size: 2.2rem; }
+      section { padding: 48px 0; }
+      .instructor-flex { flex-direction: column; text-align: center; }
+      .instructor-bio { max-width: 100%; }
+      .pricing-main { padding: 28px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="container nav-inner">
+      <span class="nav-brand">laba</span>
+      <div class="nav-right">
+        <span class="nav-info">Kurz &middot; 15. 4. 2026 &middot; Živě online</span>
+        <a class="btn btn-gold" href="#pricing">Chci místo</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO — centered (v2 je split layout) -->
+  <header class="hero">
+    <div class="container">
+      <div class="hero-tag">
+        <span class="dot"></span>
+        Registrace otevřena &middot; zbývá 12 míst
+      </div>
+
+      <h1>Naučte se <em>[výsledek]</em><br>za jedno odpoledne.</h1>
+
+      <p class="hero-sub">Praktický kurz pro ty, kdo chtějí [konkrétní transformace]. Bez fluff. S výstupem, který druhý den použijete.</p>
+
+      <!-- Stats bar — kompaktní přehled místo info karty -->
+      <div class="stats-bar">
+        <div class="stat">
+          <div class="stat-value">Út 15. 4.</div>
+          <div class="stat-label">Datum</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value">18:00</div>
+          <div class="stat-label">Start</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value">2,5 h</div>
+          <div class="stat-label">Délka</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value">40 lidí</div>
+          <div class="stat-label">Kapacita</div>
+        </div>
+      </div>
+
+      <div class="hero-price">
+        <span class="price-old">2 490 Kč</span>
+        <span class="price-big">1 990 Kč</span>
+        <span class="price-vat"> vč. DPH</span>
+        <span class="badge">Early bird &minus;20 %</span>
+      </div>
+
+      <div class="hero-ctas">
+        <a class="btn btn-gold btn-large" href="#pricing">Rezervovat místo</a>
+        <a class="btn btn-ghost" href="#program">Program kurzu</a>
+      </div>
+      <p class="hero-trust">14denní garance vrácení peněz &middot; Karta i faktura</p>
+    </div>
+  </header>
+
+  <!-- BENEFITY — 2x2 grid karet (v2 má numbered strip) -->
+  <section class="raised">
+    <div class="container">
+      <div class="section-header center">
+        <span class="tag">Co si odnesete</span>
+        <h2 class="section-title">Výsledky, ne teorie.</h2>
+        <p class="section-desc">Každý bod = něco, co druhý den použijete v práci.</p>
+      </div>
+      <div class="benefit-grid">
+        <div class="benefit-card">
+          <div class="benefit-num">01</div>
+          <h3>Hotový výstup</h3>
+          <p>Šablona, checklist nebo návrh — ne jen inspirace, ale něco, co okamžitě použijete.</p>
+        </div>
+        <div class="benefit-card">
+          <div class="benefit-num">02</div>
+          <h3>Opakovatelný proces</h3>
+          <p>Kroky, které zopakujete znovu a znovu. Ne jednorázová show.</p>
+        </div>
+        <div class="benefit-card">
+          <div class="benefit-num">03</div>
+          <h3>Ušetřený čas</h3>
+          <p>Místo X hodin to zvládnete za Y minut. Konkrétní čísla, ne obecné sliby.</p>
+        </div>
+        <div class="benefit-card">
+          <div class="benefit-num">04</div>
+          <h3>Jistota v [tématu]</h3>
+          <p>Přestaňte tápat v oblasti, kde teď ztrácíte energii.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRO KOHO — full-width stacked rows (v2 má side-by-side boxy) -->
+  <section>
+    <div class="container">
+      <div class="section-header">
+        <span class="tag">Pro koho</span>
+        <h2 class="section-title">Je to pro vás?</h2>
+      </div>
+      <div class="audience-stack">
+        <div class="audience-row yes">
+          <h3>Tohle je pro vás</h3>
+          <ul>
+            <li>Marketéry, kteří chtějí [skill]</li>
+            <li>Manažery řešící [problém]</li>
+            <li>Každého, kdo chce přestat [bolest]</li>
+          </ul>
+        </div>
+        <div class="audience-row no">
+          <h3>Radši ne, pokud</h3>
+          <ul>
+            <li>Hledáte jen teorii bez práce</li>
+            <li>Nechcete zkoušet nové věci</li>
+            <li>Potřebujete akademický certifikát</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROGRAM — horizontální karty 4x grid (v2 má vertikální timeline) -->
+  <section class="raised" id="program">
+    <div class="container">
+      <div class="section-header center">
+        <span class="tag">Program</span>
+        <h2 class="section-title">Co vás čeká</h2>
+      </div>
+      <div class="program-scroll">
+        <div class="program-card">
+          <div class="program-step">01</div>
+          <h4>Kontext a cíl</h4>
+          <p>18:00 – 18:15<br>Proč to řešíme, kam se chceme dostat</p>
+        </div>
+        <div class="program-card">
+          <div class="program-step">02</div>
+          <h4>Hlavní blok</h4>
+          <p>18:15 – 19:30<br>Postup, ukázky, cvičení — praktická část</p>
+        </div>
+        <div class="program-card">
+          <div class="program-step">03</div>
+          <h4>Q&amp;A</h4>
+          <p>19:30 – 20:15<br>Vaše otázky, naše odpovědi</p>
+        </div>
+        <div class="program-card">
+          <div class="program-step">04</div>
+          <h4>Shrnutí</h4>
+          <p>20:15 – 20:30<br>Co si odnášíte, jak pokračovat</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LEKTOR -->
+  <section>
+    <div class="container">
+      <div class="section-header">
+        <span class="tag">Lektor/ka</span>
+      </div>
+      <div class="instructor-flex">
+        <div class="instructor-photo"></div>
+        <div>
+          <h3 class="instructor-name">Jméno Příjmení</h3>
+          <p class="instructor-role">Role &middot; Firma</p>
+          <p class="instructor-bio">X let v oboru. Pomohl/a [konkrétní výsledek] u [typ klientů]. Krátké, důvěryhodné bio — důkaz, že ví, o čem mluví.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- REFERENCE -->
+  <section class="raised">
+    <div class="container">
+      <div class="section-header center">
+        <span class="tag">Reference</span>
+        <h2 class="section-title">Co říkají účastníci</h2>
+      </div>
+      <div class="quote-card">
+        <blockquote>Konečně něco, co jsem hned použila v týmu — ne obecné slidové teorie. Za ty peníze absolutní no-brainer.</blockquote>
+        <cite>Jméno Příjmení &middot; Pozice, Firma</cite>
+      </div>
+    </div>
+  </section>
+
+  <!-- CENA — split layout: includes + side box (v2 má centered dark box) -->
+  <section id="pricing">
+    <div class="container">
+      <div class="section-header">
+        <span class="tag">Cena</span>
+        <h2 class="section-title">Co je v ceně</h2>
+      </div>
+      <div class="pricing-wrap">
+        <div class="pricing-main">
+          <div style="margin-bottom: 4px;">
+            <span class="price-old">2 490 Kč</span>
+            <span class="price-big">1 990 Kč</span>
+            <span class="price-vat"> vč. DPH</span>
+          </div>
+          <span class="badge">Early bird do 8. 4.</span>
+          <ul class="pricing-includes">
+            <li>Živý online program (2,5 h)</li>
+            <li>Záznam po 14 dní</li>
+            <li>Pracovní materiály — PDF, šablony</li>
+            <li>Přístup do skupiny pro sdílení</li>
+          </ul>
+          <a class="btn btn-gold btn-large" style="width: 100%; justify-content: center;" href="#">Přejít k platbě</a>
+          <p style="margin-top: 12px; font-size: 13px; color: var(--text-dim); text-align: center;">14denní garance &middot; Karta i faktura</p>
+        </div>
+        <div class="pricing-side">
+          <h3>Proč tato cena?</h3>
+          <p>Hodinová konzultace stojí 2–5 tis. Kč. Tady dostanete 2,5 h praktického programu, materiály a záznam — za méně než jednu konzultaci.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="raised">
+    <div class="narrow">
+      <div class="section-header center">
+        <span class="tag">FAQ</span>
+        <h2 class="section-title">Časté dotazy</h2>
+      </div>
+      <details>
+        <summary>Co když nestihnu živý termín?</summary>
+        <p>Máte přístup k záznamu po dobu 14 dní. Hlavní hodnotu si dopracujete vlastním tempem.</p>
+      </details>
+      <details>
+        <summary>Je to vhodné pro začátečníky?</summary>
+        <p>Ano, pokud máte základní orientaci v [téma]. Nevhodné, pokud teprve začínáte s [prerekvizita].</p>
+      </details>
+      <details>
+        <summary>Jak funguje vrácení peněz?</summary>
+        <p>Do 14 dnů od nákupu — bez otázek. Stačí napsat e-mail.</p>
+      </details>
+      <details>
+        <summary>Dostanu fakturu?</summary>
+        <p>Ano, automaticky po platbě. Podporujeme platby kartou i převodem pro firmy.</p>
+      </details>
+    </div>
+  </section>
+
+  <!-- FINAL CTA -->
+  <div class="final-cta">
+    <div class="container">
+      <h2>Připojte se.<br><em>Zbývá 12 míst.</em></h2>
+      <p>Kapacita je omezená záměrně — chceme, aby kurz fungoval.</p>
+      <a class="btn btn-gold btn-large" href="#pricing">Rezervovat za 1 990 Kč</a>
+    </div>
+  </div>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2026 Laba Czech vzdělávání s.r.o. &middot; <a href="#">Obchodní podmínky</a> &middot; <a href="#">Ochrana osobních údajů</a></p>
+      <p style="margin-top: 6px;">Rohanské nábřeží 678/23, Karlín, 186 00, Praha 8 &middot; IČO: 17519039</p>
+    </div>
+  </footer>
+
+</body>
+</html>

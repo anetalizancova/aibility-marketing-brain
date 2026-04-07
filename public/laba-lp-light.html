@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>LP v2 — Creative Edgy</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #f5f0eb;
+      --black: #111111;
+      --white: #ffffff;
+      --cream: #f5f0eb;
+      --warm-gray: #8a8279;
+      --light-gray: #e8e2db;
+      --pink: #ff3d9a;
+      --electric: #4f46e5;
+      --lime: #a3e635;
+      --radius: 20px;
+      --radius-sm: 12px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: Inter, system-ui, sans-serif;
+      background: var(--cream);
+      color: var(--black);
+      line-height: 1.6;
+      font-size: 16px;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    .container { max-width: 1000px; margin: 0 auto; padding: 0 24px; }
+
+    /* MARQUEE */
+    .marquee-wrap {
+      overflow: hidden;
+      background: var(--black);
+      color: var(--white);
+      padding: 10px 0;
+    }
+    .marquee-track {
+      display: flex;
+      gap: 48px;
+      white-space: nowrap;
+      animation: scroll 20s linear infinite;
+      width: max-content;
+    }
+    .marquee-track span {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .marquee-track .sep { color: var(--pink); }
+    @keyframes scroll {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    /* NAV */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(245, 240, 235, 0.85);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(0,0,0,0.06);
+      padding: 12px 0;
+    }
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .nav-brand {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 20px;
+      letter-spacing: -0.02em;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 24px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 15px;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .btn-black {
+      background: var(--black);
+      color: var(--white);
+    }
+    .btn-black:hover { background: #2a2a2a; transform: translateY(-1px); }
+    .btn-pink {
+      background: var(--pink);
+      color: var(--white);
+      font-size: 17px;
+      padding: 16px 36px;
+    }
+    .btn-pink:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(255,61,154,0.3); }
+    .btn-ghost {
+      background: transparent;
+      color: var(--black);
+      border: 2px solid var(--black);
+    }
+    .btn-ghost:hover { background: var(--black); color: var(--white); }
+
+    /* HERO */
+    .hero {
+      padding: 64px 0 48px;
+      position: relative;
+    }
+    .hero-layout {
+      display: grid;
+      gap: 40px;
+      align-items: center;
+    }
+    @media (min-width: 768px) {
+      .hero-layout { grid-template-columns: 1.2fr 0.8fr; }
+    }
+    .hero-left {}
+    .hero-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 600;
+      background: var(--black);
+      color: var(--white);
+      margin-bottom: 20px;
+    }
+    .hero-tag .live-dot {
+      width: 7px; height: 7px;
+      background: var(--lime);
+      border-radius: 50%;
+      animation: blink 1.5s ease infinite;
+    }
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+    .hero h1 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(2.4rem, 5.5vw, 3.8rem);
+      font-weight: 700;
+      letter-spacing: -0.04em;
+      line-height: 1.05;
+      margin-bottom: 16px;
+    }
+    .hero h1 .highlight {
+      color: var(--pink);
+      position: relative;
+    }
+    .hero h1 .highlight::after {
+      content: '';
+      position: absolute;
+      bottom: 2px;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: var(--pink);
+      opacity: 0.3;
+      border-radius: 2px;
+    }
+    .hero-sub {
+      font-size: 1.1rem;
+      color: var(--warm-gray);
+      max-width: 440px;
+      margin-bottom: 28px;
+    }
+    .hero-ctas {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .hero-trust {
+      font-size: 13px;
+      color: var(--warm-gray);
+    }
+
+    /* HERO RIGHT — info card */
+    .info-card {
+      background: var(--white);
+      border-radius: var(--radius);
+      padding: 32px 28px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 20px 60px rgba(0,0,0,0.06);
+    }
+    .info-card-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--light-gray);
+      font-size: 0.95rem;
+    }
+    .info-card-row:last-child { border: none; }
+    .info-card-row .label { color: var(--warm-gray); }
+    .info-card-row .value { font-weight: 700; text-align: right; }
+    .info-card-price {
+      text-align: center;
+      padding-top: 20px;
+    }
+    .info-card-price .big {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 2.5rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+    .info-card-price .vat { font-size: 0.85rem; color: var(--warm-gray); }
+    .info-card-price .old {
+      text-decoration: line-through;
+      color: var(--warm-gray);
+      font-size: 1rem;
+      margin-right: 8px;
+    }
+    .badge-save {
+      display: inline-block;
+      padding: 3px 10px;
+      font-size: 12px;
+      font-weight: 700;
+      background: var(--lime);
+      color: var(--black);
+      border-radius: 999px;
+      margin-left: 4px;
+    }
+
+    /* SECTIONS */
+    section { padding: 64px 0; }
+    section.dark {
+      background: var(--black);
+      color: var(--white);
+    }
+    section.white { background: var(--white); }
+
+    .tag {
+      display: inline-block;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--pink);
+      margin-bottom: 12px;
+    }
+    .section-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(1.6rem, 3.5vw, 2.2rem);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      margin-bottom: 12px;
+      line-height: 1.1;
+    }
+    .section-desc {
+      color: var(--warm-gray);
+      font-size: 1.05rem;
+      max-width: 500px;
+    }
+    .section-header { margin-bottom: 40px; }
+    .section-header.center { text-align: center; }
+    .section-header.center .section-desc { margin: 0 auto; }
+
+    /* BENEFIT STRIP */
+    .benefit-strip {
+      display: grid;
+      gap: 2px;
+    }
+    .benefit-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      padding: 24px;
+      background: var(--white);
+      border-radius: var(--radius-sm);
+      transition: transform 0.15s;
+    }
+    .benefit-item:hover { transform: translateX(4px); }
+    .benefit-num {
+      flex-shrink: 0;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--light-gray);
+      line-height: 1;
+      min-width: 48px;
+    }
+    .benefit-item h3 {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .benefit-item p {
+      font-size: 0.9rem;
+      color: var(--warm-gray);
+      line-height: 1.5;
+    }
+
+    /* AUDIENCE COLUMNS */
+    .audience-cols {
+      display: grid;
+      gap: 16px;
+    }
+    @media (min-width: 640px) { .audience-cols { grid-template-columns: 1fr 1fr; } }
+    .audience-box {
+      padding: 28px;
+      border-radius: var(--radius);
+    }
+    .audience-box.yes {
+      background: var(--white);
+      border: 2px solid var(--lime);
+    }
+    .audience-box.no {
+      background: var(--white);
+      border: 2px solid var(--light-gray);
+    }
+    .audience-box h3 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.1rem;
+      margin-bottom: 16px;
+    }
+    .audience-box ul { list-style: none; }
+    .audience-box li {
+      padding: 6px 0 6px 24px;
+      position: relative;
+      font-size: 0.95rem;
+      color: var(--warm-gray);
+    }
+    .audience-box.yes li::before { content: "+"; position: absolute; left: 0; font-weight: 800; color: #16a34a; }
+    .audience-box.no li::before { content: "—"; position: absolute; left: 0; font-weight: 800; color: var(--warm-gray); }
+
+    /* PROGRAM — numbered blocks on dark bg */
+    .program-list { list-style: none; }
+    .program-item {
+      display: flex;
+      gap: 20px;
+      padding: 24px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      align-items: flex-start;
+    }
+    .program-item:last-child { border: none; }
+    .program-step {
+      flex-shrink: 0;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: var(--pink);
+      line-height: 1;
+      min-width: 56px;
+    }
+    .program-item h4 {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+      color: var(--white);
+    }
+    .program-item p { font-size: 0.9rem; color: rgba(255,255,255,0.5); }
+
+    /* INSTRUCTOR */
+    .instructor-row {
+      display: flex;
+      gap: 32px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .instructor-img {
+      flex-shrink: 0;
+      width: 160px;
+      height: 160px;
+      border-radius: var(--radius);
+      background: linear-gradient(135deg, var(--pink), var(--electric));
+      opacity: 0.85;
+    }
+    .instructor-text h3 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .instructor-text .role {
+      color: var(--pink);
+      font-weight: 600;
+      margin-bottom: 12px;
+      font-size: 0.95rem;
+    }
+    .instructor-text .bio {
+      color: var(--warm-gray);
+      font-size: 0.95rem;
+      max-width: 420px;
+    }
+
+    /* QUOTE */
+    .quote-block {
+      background: var(--white);
+      border-radius: var(--radius);
+      padding: 40px;
+      max-width: 600px;
+      margin: 0 auto;
+      text-align: center;
+      position: relative;
+    }
+    .quote-block::before {
+      content: '\201C';
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 5rem;
+      color: var(--pink);
+      position: absolute;
+      top: 8px;
+      left: 28px;
+      line-height: 1;
+      opacity: 0.3;
+    }
+    .quote-block blockquote {
+      font-size: 1.1rem;
+      font-style: italic;
+      line-height: 1.6;
+      margin-bottom: 16px;
+    }
+    .quote-block cite { font-size: 14px; color: var(--warm-gray); font-style: normal; font-weight: 600; }
+
+    /* PRICING SECTION */
+    .pricing-center { text-align: center; }
+    .pricing-box {
+      display: inline-block;
+      background: var(--black);
+      color: var(--white);
+      border-radius: var(--radius);
+      padding: 40px 48px;
+      min-width: 360px;
+      text-align: left;
+    }
+    .pricing-box .big-price {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 3rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+    .pricing-box .includes {
+      list-style: none;
+      margin: 24px 0;
+    }
+    .pricing-box .includes li {
+      padding: 8px 0 8px 24px;
+      position: relative;
+      font-size: 0.95rem;
+      color: rgba(255,255,255,0.7);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .pricing-box .includes li:last-child { border: none; }
+    .pricing-box .includes li::before {
+      content: "~";
+      position: absolute;
+      left: 0;
+      color: var(--pink);
+      font-weight: 700;
+    }
+
+    /* FAQ */
+    .faq-list { max-width: 640px; margin: 0 auto; }
+    details {
+      border-bottom: 1px solid var(--light-gray);
+    }
+    section.dark details { border-color: rgba(255,255,255,0.08); }
+    details summary {
+      padding: 20px 0;
+      font-weight: 600;
+      cursor: pointer;
+      list-style: none;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    details summary::after {
+      content: "+";
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.4rem;
+      color: var(--warm-gray);
+    }
+    details[open] summary::after { content: "−"; }
+    details p {
+      padding-bottom: 20px;
+      color: var(--warm-gray);
+      font-size: 0.95rem;
+    }
+    section.dark details p { color: rgba(255,255,255,0.5); }
+
+    /* FINAL CTA */
+    .final-section {
+      text-align: center;
+      padding: 80px 0;
+    }
+    .final-section h2 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      margin-bottom: 12px;
+      line-height: 1.05;
+    }
+    .final-section p {
+      color: var(--warm-gray);
+      margin-bottom: 28px;
+      font-size: 1.05rem;
+    }
+
+    footer {
+      padding: 24px 0;
+      text-align: center;
+      font-size: 13px;
+      color: var(--warm-gray);
+      border-top: 1px solid var(--light-gray);
+    }
+    footer a { color: var(--warm-gray); text-decoration: none; }
+    footer a:hover { color: var(--black); }
+
+    /* MOBILE */
+    @media (max-width: 767px) {
+      .hero { padding: 40px 0 32px; }
+      .hero h1 { font-size: 2rem; }
+      section { padding: 48px 0; }
+      .instructor-row { flex-direction: column; }
+      .pricing-box { min-width: auto; padding: 28px 24px; }
+      .info-card { margin-top: 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- MARQUEE -->
+  <div class="marquee-wrap">
+    <div class="marquee-track" aria-hidden="true">
+      <span>Registrace otevřena</span><span class="sep">/</span>
+      <span>Zbývá 12 míst</span><span class="sep">/</span>
+      <span>Online kurz</span><span class="sep">/</span>
+      <span>Živě + záznam</span><span class="sep">/</span>
+      <span>15. dubna 2026</span><span class="sep">/</span>
+      <span>1 990 Kč vč. DPH</span><span class="sep">/</span>
+      <span>Registrace otevřena</span><span class="sep">/</span>
+      <span>Zbývá 12 míst</span><span class="sep">/</span>
+      <span>Online kurz</span><span class="sep">/</span>
+      <span>Živě + záznam</span><span class="sep">/</span>
+      <span>15. dubna 2026</span><span class="sep">/</span>
+      <span>1 990 Kč vč. DPH</span><span class="sep">/</span>
+    </div>
+  </div>
+
+  <nav>
+    <div class="container nav-inner">
+      <span class="nav-brand">laba</span>
+      <a class="btn btn-black" href="#pricing">Chci místo &rarr;</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <header class="hero">
+    <div class="container">
+      <div class="hero-layout">
+        <div class="hero-left">
+          <div class="hero-tag">
+            <span class="live-dot"></span>
+            Krátký kurz &middot; Živě online
+          </div>
+          <h1>Naučte se<br><span class="highlight">[výsledek]</span><br>za jedno odpoledne.</h1>
+          <p class="hero-sub">Praktický kurz. Žádný fluff. Odejdete s hotovým výstupem, který použijete hned.</p>
+          <div class="hero-ctas">
+            <a class="btn btn-pink" href="#pricing">Rezervovat místo</a>
+            <a class="btn btn-ghost" href="#program">Program &darr;</a>
+          </div>
+          <p class="hero-trust">14denní garance &middot; Platba kartou i fakturou</p>
+        </div>
+        <div class="hero-right">
+          <div class="info-card">
+            <div class="info-card-row">
+              <span class="label">Datum</span>
+              <span class="value">Út 15. 4. 2026</span>
+            </div>
+            <div class="info-card-row">
+              <span class="label">Čas</span>
+              <span class="value">18:00 – 20:30</span>
+            </div>
+            <div class="info-card-row">
+              <span class="label">Formát</span>
+              <span class="value">Živě + záznam 14 dní</span>
+            </div>
+            <div class="info-card-row">
+              <span class="label">Kapacita</span>
+              <span class="value">Max 40 lidí</span>
+            </div>
+            <div class="info-card-price">
+              <span class="old">2 490 Kč</span>
+              <span class="big">1 990 Kč</span>
+              <span class="badge-save">−20%</span>
+              <br><span class="vat">vč. DPH &middot; Early bird do 8. 4.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- BENEFITY -->
+  <section>
+    <div class="container">
+      <div class="section-header">
+        <span class="tag">Co si odnesete</span>
+        <h2 class="section-title">4 věci, které budete umět.</h2>
+      </div>
+      <div class="benefit-strip">
+        <div class="benefit-item">
+          <span class="benefit-num">01</span>
+          <div>
+            <h3>Hotový výstup</h3>
+            <p>Šablona, checklist nebo návrh — ne inspirace, ale něco, co okamžitě použijete.</p>
+          </div>
+        </div>
+        <div class="benefit-item">
+          <span class="benefit-num">02</span>
+          <div>
+            <h3>Opakovatelný proces</h3>
+            <p>Kroky, které zopakujete sami — ne jednorázová show.</p>
+          </div>
+        </div>
+        <div class="benefit-item">
+          <span class="benefit-num">03</span>
+          <div>
+            <h3>Ušetřený čas</h3>
+            <p>Místo X hodin to zvládnete za Y minut. Konkrétní, ne sliby.</p>
+          </div>
+        </div>
+        <div class="benefit-item">
+          <span class="benefit-num">04</span>
+          <div>
+            <h3>Jistota v [tématu]</h3>
+            <p>Přestaňte tápat v oblasti, kde teď ztrácíte čas a energii.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRO KOHO -->
+  <section class="white">
+    <div class="container">
+      <div class="section-header center">
+        <span class="tag">Pro koho</span>
+        <h2 class="section-title">Je to pro vás?</h2>
+      </div>
+      <div class="audience-cols">
+        <div class="audience-box yes">
+          <h3>Tohle je pro vás</h3>
+          <ul>
+            <li>Marketéry, kteří chtějí [skill]</li>
+            <li>Manažery, kteří řeší [problém]</li>
+            <li>Každého, kdo chce přestat [bolest]</li>
+          </ul>
+        </div>
+        <div class="audience-box no">
+          <h3>Radši ne, pokud</h3>
+          <ul>
+            <li>Hledáte jen teorii bez práce</li>
+            <li>Nechcete zkoušet nové věci</li>
+            <li>Potřebujete akademický certifikát</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROGRAM -->
+  <section class="dark" id="program">
+    <div class="container" style="max-width: 640px;">
+      <div class="section-header">
+        <span class="tag">Program</span>
+        <h2 class="section-title" style="color: #fff;">Co vás čeká</h2>
+      </div>
+      <ul class="program-list">
+        <li class="program-item">
+          <span class="program-step">01</span>
+          <div>
+            <h4>Kontext a cíl</h4>
+            <p>18:00 – 18:15 &middot; Proč to řešíme a kam se chceme dostat</p>
+          </div>
+        </li>
+        <li class="program-item">
+          <span class="program-step">02</span>
+          <div>
+            <h4>Hlavní blok — postup, ukázky, cvičení</h4>
+            <p>18:15 – 19:30 &middot; Praktická část s live ukázkami</p>
+          </div>
+        </li>
+        <li class="program-item">
+          <span class="program-step">03</span>
+          <div>
+            <h4>Q&amp;A a další kroky</h4>
+            <p>19:30 – 20:15 &middot; Vaše otázky, naše odpovědi</p>
+          </div>
+        </li>
+        <li class="program-item">
+          <span class="program-step">04</span>
+          <div>
+            <h4>Shrnutí a materiály</h4>
+            <p>20:15 – 20:30 &middot; Co si odnášíte a jak pokračovat</p>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- LEKTOR -->
+  <section>
+    <div class="container">
+      <div class="section-header">
+        <span class="tag">Lektor/ka</span>
+      </div>
+      <div class="instructor-row">
+        <div class="instructor-img"></div>
+        <div class="instructor-text">
+          <h3>Jméno Příjmení</h3>
+          <p class="role">Role &middot; Firma</p>
+          <p class="bio">X let v oboru. Pomohl/a [konkrétní výsledek] u [typ klientů]. Bio je krátké — ne životopis, ale důkaz, že ví, o čem mluví.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- REFERENCE -->
+  <section class="white">
+    <div class="container">
+      <div class="section-header center">
+        <span class="tag">Reference</span>
+        <h2 class="section-title">Co říkají účastníci</h2>
+      </div>
+      <div class="quote-block">
+        <blockquote>Konečně něco, co jsem hned použila v týmu — ne obecné slidové teorie. Za ty peníze absolutní no-brainer.</blockquote>
+        <cite>Jméno Příjmení &middot; Pozice, Firma</cite>
+      </div>
+    </div>
+  </section>
+
+  <!-- CENA -->
+  <section class="pricing-center" id="pricing">
+    <div class="container">
+      <div class="section-header center">
+        <span class="tag">Cena</span>
+        <h2 class="section-title">Co je v ceně</h2>
+      </div>
+      <div class="pricing-box">
+        <p style="margin-bottom: 4px;">
+          <span style="text-decoration:line-through; color: rgba(255,255,255,0.4); font-size:1rem;">2 490 Kč</span>
+        </p>
+        <span class="big-price">1 990 Kč</span>
+        <span style="font-size:0.85rem; color: rgba(255,255,255,0.5);"> vč. DPH</span>
+        <span class="badge-save" style="margin-left: 8px;">Early bird</span>
+        <ul class="includes">
+          <li>Živý online program (2,5 h)</li>
+          <li>Záznam po 14 dní</li>
+          <li>Pracovní materiály — PDF, šablony</li>
+          <li>Přístup do skupiny pro sdílení</li>
+        </ul>
+        <a class="btn btn-pink" style="width: 100%; justify-content: center;" href="#">Přejít k platbě &rarr;</a>
+        <p style="margin-top: 12px; font-size: 13px; color: rgba(255,255,255,0.4); text-align: center;">14denní garance &middot; Platba kartou i fakturou</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section>
+    <div class="container faq-list">
+      <div class="section-header center">
+        <span class="tag">FAQ</span>
+        <h2 class="section-title">Časté dotazy</h2>
+      </div>
+      <details>
+        <summary>Co když nestihnu živý termín?</summary>
+        <p>Máte záznam 14 dní. Hlavní hodnotu si dopracujete vlastním tempem.</p>
+      </details>
+      <details>
+        <summary>Je to vhodné pro začátečníky?</summary>
+        <p>Ano, pokud máte základní orientaci v [téma]. Ne, pokud teprve začínáte s [prerekvizita].</p>
+      </details>
+      <details>
+        <summary>Jak funguje vrácení peněz?</summary>
+        <p>Do 14 dnů od nákupu — bez otázek. Stačí napsat e-mail.</p>
+      </details>
+      <details>
+        <summary>Dostanu fakturu?</summary>
+        <p>Ano, automaticky po platbě. Podporujeme platby kartou i bankovním převodem pro firmy.</p>
+      </details>
+    </div>
+  </section>
+
+  <!-- MARQUEE 2 — urgence -->
+  <div class="marquee-wrap" style="background: var(--pink);">
+    <div class="marquee-track" style="animation-duration: 16s;">
+      <span>Zbývá 12 míst</span><span class="sep" style="color: #fff;">&middot;</span>
+      <span>Registrace do 15. 4.</span><span class="sep" style="color: #fff;">&middot;</span>
+      <span>1 990 Kč vč. DPH</span><span class="sep" style="color: #fff;">&middot;</span>
+      <span>Zbývá 12 míst</span><span class="sep" style="color: #fff;">&middot;</span>
+      <span>Registrace do 15. 4.</span><span class="sep" style="color: #fff;">&middot;</span>
+      <span>1 990 Kč vč. DPH</span><span class="sep" style="color: #fff;">&middot;</span>
+      <span>Zbývá 12 míst</span><span class="sep" style="color: #fff;">&middot;</span>
+      <span>Registrace do 15. 4.</span><span class="sep" style="color: #fff;">&middot;</span>
+      <span>1 990 Kč vč. DPH</span><span class="sep" style="color: #fff;">&middot;</span>
+      <span>Zbývá 12 míst</span><span class="sep" style="color: #fff;">&middot;</span>
+      <span>Registrace do 15. 4.</span><span class="sep" style="color: #fff;">&middot;</span>
+      <span>1 990 Kč vč. DPH</span><span class="sep" style="color: #fff;">&middot;</span>
+    </div>
+  </div>
+
+  <!-- FINAL CTA -->
+  <div class="final-section">
+    <div class="container">
+      <h2>Připojte se.<br><span style="color: var(--pink);">Zbývá 12 míst.</span></h2>
+      <p>Kapacita je omezená záměrně — chceme, aby kurz fungoval.</p>
+      <a class="btn btn-pink" href="#pricing">Rezervovat za 1 990 Kč &rarr;</a>
+    </div>
+  </div>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2026 Laba Czech vzdělávání s.r.o. &middot; <a href="#">Obchodní podmínky</a> &middot; <a href="#">Ochrana osobních údajů</a></p>
+    </div>
+  </footer>
+
+</body>
+</html>
