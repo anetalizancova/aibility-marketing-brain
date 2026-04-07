@@ -28,7 +28,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="cs" className={`${montserrat.variable} ${dmSans.variable}`}>
-      <body className="min-h-screen bg-bg text-text antialiased">
+      <body className="min-h-screen text-text antialiased">
         {children}
       </body>
     </html>

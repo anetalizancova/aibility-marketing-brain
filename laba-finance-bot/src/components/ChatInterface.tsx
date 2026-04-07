@@ -5,6 +5,7 @@ import type { ChatMessage, QAEntry, Category } from "@/lib/types";
 import MessageBubble from "./MessageBubble";
 import QuickQuestions from "./QuickQuestions";
 import CategoryPanel from "./CategoryPanel";
+import Header from "./Header";
 
 function uid() {
   return Math.random().toString(36).slice(2, 10);
@@ -30,6 +31,15 @@ export default function ChatInterface() {
   }, []);
 
   useEffect(scrollToBottom, [messages, scrollToBottom]);
+
+  function handleReset() {
+    setMessages([]);
+    setHasInteracted(false);
+    setActiveCategory(null);
+    setCategoryResults(null);
+    setInput("");
+    inputRef.current?.focus();
+  }
 
   async function handleSearch(query: string) {
     if (!query.trim() || loading) return;
@@ -141,103 +151,105 @@ export default function ChatInterface() {
   }
 
   return (
-    <div className="max-w-3xl mx-auto px-5 flex flex-col h-[calc(100dvh-56px)]">
-      {/* Conversation area */}
-      <div ref={scrollRef} className="flex-1 overflow-y-auto">
-        {/* Hero / Welcome */}
-        {!hasInteracted && (
-          <div className="pt-[min(12vh,80px)] pb-8 space-y-6">
-            <div className="space-y-2">
-              <h2 className="font-display font-extrabold text-[clamp(1.75rem,4vw,2.5rem)] leading-[1.1] tracking-tight">
-                Ahoj, co potřebuješ
-                <br />
-                <span className="relative inline-block">
-                  vědět?
-                  <span className="absolute -bottom-1 left-0 w-full h-2 bg-accent/50 -z-10 rounded-sm" />
-                </span>
-              </h2>
-              <p className="text-text-secondary text-[15px] max-w-[40ch]">
-                Fakturace, platby, DPH, HubSpot &mdash; najdi odpověď nebo napiš otázku.
-              </p>
-            </div>
+    <>
+      <Header showReset={hasInteracted} onReset={handleReset} />
 
-            <div className="space-y-3">
+      <div className="max-w-3xl mx-auto px-5 flex flex-col h-[calc(100dvh-56px)]">
+        {/* Conversation area */}
+        <div ref={scrollRef} className="flex-1 overflow-y-auto">
+          {/* Hero / Welcome */}
+          {!hasInteracted && (
+            <div className="pt-[min(14vh,100px)] pb-10 space-y-8">
+              <div className="space-y-3">
+                <h2 className="font-display font-extrabold text-[clamp(2rem,5vw,3rem)] leading-[1.05] tracking-tight">
+                  Ahoj, co potřebuješ
+                  <br />
+                  <span className="relative inline-block">
+                    vědět?
+                    <span className="absolute -bottom-1.5 left-0 w-full h-3 bg-accent/60 -z-10 rounded-sm" />
+                  </span>
+                </h2>
+                <p className="text-text-secondary text-lg max-w-[42ch] leading-relaxed">
+                  Fakturace, platby, DPH, HubSpot &mdash; najdi odpověď nebo napiš otázku.
+                </p>
+              </div>
+
               <QuickQuestions onSelect={handleSearch} />
             </div>
-          </div>
-        )}
+          )}
 
-        {/* Messages */}
-        {hasInteracted && (
-          <div className="py-6 space-y-8">
-            {messages.map((msg) => (
-              <MessageBubble
-                key={msg.id}
-                message={msg}
-                onSuggestionClick={(entry) => handleSuggestionClick(msg.id, entry)}
-                onSubmitForReview={() => submitForReview(msg.id)}
-                onDismissSuggestions={() => handleDismissSuggestions(msg.id)}
-              />
-            ))}
+          {/* Messages */}
+          {hasInteracted && (
+            <div className="py-8 space-y-10">
+              {messages.map((msg) => (
+                <MessageBubble
+                  key={msg.id}
+                  message={msg}
+                  onSuggestionClick={(entry) => handleSuggestionClick(msg.id, entry)}
+                  onSubmitForReview={() => submitForReview(msg.id)}
+                  onDismissSuggestions={() => handleDismissSuggestions(msg.id)}
+                />
+              ))}
 
-            {loading && (
-              <div className="flex items-center gap-1.5 py-1">
-                <span className="w-1.5 h-1.5 rounded-full bg-text-muted animate-[pulse-dot_1.2s_ease-in-out_infinite]" />
-                <span className="w-1.5 h-1.5 rounded-full bg-text-muted animate-[pulse-dot_1.2s_ease-in-out_0.2s_infinite]" />
-                <span className="w-1.5 h-1.5 rounded-full bg-text-muted animate-[pulse-dot_1.2s_ease-in-out_0.4s_infinite]" />
-              </div>
-            )}
-          </div>
-        )}
-      </div>
-
-      {/* Bottom bar */}
-      <div className="pb-5 pt-3 space-y-2.5">
-        {/* Categories row */}
-        <div className="flex items-center justify-between gap-3">
-          <CategoryPanel activeCategory={activeCategory} onSelect={handleCategorySelect} />
+              {loading && (
+                <div className="flex items-center gap-2 py-1">
+                  <span className="w-2 h-2 rounded-full bg-accent animate-[pulse-dot_1.2s_ease-in-out_infinite]" />
+                  <span className="w-2 h-2 rounded-full bg-accent animate-[pulse-dot_1.2s_ease-in-out_0.2s_infinite]" />
+                  <span className="w-2 h-2 rounded-full bg-accent animate-[pulse-dot_1.2s_ease-in-out_0.4s_infinite]" />
+                </div>
+              )}
+            </div>
+          )}
         </div>
 
-        {/* Category results */}
-        {categoryResults && categoryResults.length > 0 && (
-          <div className="bg-bg-surface rounded-xl border border-border p-1 max-h-[35vh] overflow-y-auto">
-            {categoryResults.map((entry) => (
-              <button
-                key={entry.id}
-                onClick={() => handleCategoryQuestionClick(entry)}
-                className="w-full text-left text-[14px] py-2.5 px-3 rounded-lg hover:bg-bg-elevated transition-colors duration-150 text-text-secondary hover:text-text"
-              >
-                {entry.question}
-              </button>
-            ))}
+        {/* Bottom bar */}
+        <div className="pb-6 pt-3 space-y-3">
+          {/* Categories */}
+          <div className="flex items-center gap-3 overflow-x-auto">
+            <CategoryPanel activeCategory={activeCategory} onSelect={handleCategorySelect} />
           </div>
-        )}
 
-        {/* Search input */}
-        <form onSubmit={handleSubmit}>
-          <div className="relative">
-            <input
-              ref={inputRef}
-              type="text"
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              placeholder="Zeptej se na cokoliv..."
-              className="w-full pl-4 pr-14 py-3.5 rounded-2xl bg-bg-surface border border-border text-[15px] transition-all duration-200 focus:border-accent focus:ring-2 focus:ring-accent/20 focus:outline-none placeholder:text-text-muted"
-              disabled={loading}
-              autoFocus
-            />
-            <button
-              type="submit"
-              disabled={loading || !input.trim()}
-              className="absolute right-2 top-1/2 -translate-y-1/2 w-9 h-9 rounded-xl bg-text text-bg flex items-center justify-center transition-all duration-200 hover:scale-105 active:scale-95 disabled:opacity-25 disabled:hover:scale-100"
-            >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M5 12h14M12 5l7 7-7 7" />
-              </svg>
-            </button>
-          </div>
-        </form>
+          {/* Category results dropdown */}
+          {categoryResults && categoryResults.length > 0 && (
+            <div className="bg-white rounded-2xl border border-border shadow-lg shadow-black/[0.04] p-1.5 max-h-[35vh] overflow-y-auto">
+              {categoryResults.map((entry) => (
+                <button
+                  key={entry.id}
+                  onClick={() => handleCategoryQuestionClick(entry)}
+                  className="w-full text-left text-sm font-medium py-3 px-4 rounded-xl hover:bg-accent-subtle transition-colors duration-150 text-text-secondary hover:text-text"
+                >
+                  {entry.question}
+                </button>
+              ))}
+            </div>
+          )}
+
+          {/* Search input */}
+          <form onSubmit={handleSubmit}>
+            <div className="relative">
+              <input
+                ref={inputRef}
+                type="text"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                placeholder="Zeptej se na cokoliv..."
+                className="w-full pl-5 pr-14 py-4 rounded-2xl bg-white border border-border text-base font-medium transition-all duration-200 focus:border-accent focus:ring-4 focus:ring-accent/15 focus:outline-none placeholder:text-text-muted shadow-sm"
+                disabled={loading}
+                autoFocus
+              />
+              <button
+                type="submit"
+                disabled={loading || !input.trim()}
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 w-10 h-10 rounded-xl bg-accent text-accent-text flex items-center justify-center transition-all duration-200 hover:bg-accent-hover hover:shadow-[0_4px_14px_oklch(92%_0.19_98/0.4)] hover:scale-105 active:scale-95 disabled:opacity-25 disabled:hover:scale-100 disabled:hover:shadow-none"
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M5 12h14M12 5l7 7-7 7" />
+                </svg>
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
-    </div>
+    </>
   );
 }

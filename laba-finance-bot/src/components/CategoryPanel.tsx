@@ -16,9 +16,9 @@ export default function CategoryPanel({ activeCategory, onSelect }: Props) {
         <button
           key={cat}
           onClick={() => onSelect(activeCategory === cat ? null : cat)}
-          className={`text-[12px] font-medium px-2.5 py-1 rounded-md transition-all duration-200 ${
+          className={`text-sm font-medium px-3 py-1.5 rounded-full transition-all duration-200 ${
             activeCategory === cat
-              ? "bg-text text-bg"
+              ? "bg-accent text-accent-text shadow-[0_2px_8px_oklch(92%_0.19_98/0.35)]"
               : "text-text-muted hover:text-text hover:bg-bg-surface"
           }`}
         >
